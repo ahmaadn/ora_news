@@ -57,4 +57,8 @@ class AppSpacing {
 
   // Divider
   static const double dividerThickness = 1.0;
+
+  // Spacing Horizontal (Horizontal Padding/Margin)
+  static const double horizontalPaddingPage = m;
+  static const double horizontalMarginElement = s;
 }
