@@ -1,0 +1,15 @@
+{
+    "editor.wordWrapColumn": 92,
+    "editor.wordWrap": "on",
+    "editor.rulers": [
+        92
+    ],
+    "dart.lineLength": 92,
+    "[dart]": {
+        "editor.rulers": [
+            92
+        ],
+        "editor.wordWrap": "on",
+        "editor.wordWrapColumn": 92
+    }
+}
