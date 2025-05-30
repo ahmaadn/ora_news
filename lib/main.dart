@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ora_news/app/config/app_color.dart';
-import 'package:ora_news/app/config/app_theme.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ora_news/app/config/app_route.dart';
 
 void main() {
   runApp(const OraNewsApp());
@@ -11,14 +12,23 @@ class OraNewsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Ora News',
-      theme: AppTheme.lightTheme,
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(title: Text('Ora News'), backgroundColor: AppColors.background),
-        body: Center(child: Text('Selamat Datang!')),
-      ),
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    return ScreenUtilInit(
+      designSize: const Size(390, 844),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) {
+        return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          title: 'News Hive',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          routerConfig: AppRouter().goRouter,
+        );
+      },
     );
   }
 }
