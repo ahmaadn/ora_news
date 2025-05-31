@@ -1,0 +1,103 @@
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ora_news/app/config/app_color.dart';
+import 'package:ora_news/app/config/app_spacing.dart';
+import 'package:ora_news/app/constants/route_names.dart';
+
+import 'package:ora_news/views/features/auth/widgets/header_page.dart';
+import 'package:ora_news/views/features/auth/widgets/signin_bottom_actions.dart';
+import 'package:ora_news/views/features/auth/widgets/signin_form.dart';
+
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      // Proses login di sini
+      String email = _emailController.text;
+      String password = _passwordController.text;
+      log('Email: $email, Password: $password');
+      // Contoh: panggil service login
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Processing Sign In...')));
+      context.goNamed(RouteNames.register);
+    }
+  }
+
+  void _forgotPassword() {
+    log('Navigate to Forgot Password Screen');
+  }
+
+  void _navigateToRegister() {
+    log('Navigate to Register Screen');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.m * 1.5),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Form(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        HeaderPage(title: 'Sign in'),
+                        AppSpacing.vsXLarge,
+                        SignInForm(
+                          formKey: _formKey,
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                          obscurePassword: _obscurePassword,
+                          onTogglePasswordVisibility: _togglePasswordVisibility,
+                          onForgotPassword: _forgotPassword,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              AppSpacing.vsLarge, // Jarak sebelum tombol
+              SignInBottomActions(
+                onContinuePressed: _submitForm,
+                onRegisterPressed: _navigateToRegister,
+              ),
+              AppSpacing.vsMedium,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
