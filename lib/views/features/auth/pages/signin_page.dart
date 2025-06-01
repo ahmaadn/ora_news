@@ -5,9 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/constants/route_names.dart';
-
+import 'package:ora_news/views/features/auth/widgets/auth_button_actions.dart';
 import 'package:ora_news/views/features/auth/widgets/header_page.dart';
-import 'package:ora_news/views/features/auth/widgets/signin_bottom_actions.dart';
 import 'package:ora_news/views/features/auth/widgets/signin_form.dart';
 
 class SignInPage extends StatefulWidget {
@@ -88,7 +87,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ),
               AppSpacing.vsLarge,
-              SignInBottomActions(
+              AuthButtonActions.signIn(
                 onContinuePressed: _submitForm,
                 onRegisterPressed: _navigateToRegister,
               ),
