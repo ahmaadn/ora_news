@@ -18,7 +18,7 @@ class CustomFieldLabel extends StatelessWidget {
       child: Text(
         text,
         style: AppTypography.subtitle2.copyWith(
-          color: enabled ? AppColors.textSecondary : AppColors.grey500,
+          color: enabled ? AppColors.textPrimary : AppColors.grey500,
         ),
       ),
     );

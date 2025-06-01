@@ -1,8 +1,8 @@
-// d:\Dev\Praktikum Pemograman Mobile\ora_news\lib\views\features\auth\widgets\signin_form.dart
 import 'package:flutter/material.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/app/utils/field_validator_builder.dart';
 import 'package:ora_news/views/widgets/custom_form_field.dart';
 
 class SignInForm extends StatelessWidget {
@@ -35,20 +35,17 @@ class SignInForm extends StatelessWidget {
             labelText: 'Email or phone number',
             hintText: 'Enter your email or phone number',
             keyboardType: TextInputType.emailAddress,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Email or phone number cannot be empty';
-              }
-              return null;
-            },
+            validator: FieldValidatorBuilder('Email').required().email().build(),
             textInputAction: TextInputAction.next,
+            collapseError: false,
           ),
-          AppSpacing.vsLarge,
+          AppSpacing.vsSmall,
           CustomFormField(
             controller: passwordController,
             labelText: 'Password',
             hintText: 'Enter your password',
             obscureText: obscurePassword,
+            collapseError: false,
             suffixIcon: IconButton(
               icon: Icon(
                 obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
@@ -56,15 +53,7 @@ class SignInForm extends StatelessWidget {
               ),
               onPressed: onTogglePasswordVisibility,
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Password cannot be empty';
-              }
-              if (value.length < 6) {
-                return 'Password must be at least 6 characters';
-              }
-              return null;
-            },
+            validator: FieldValidatorBuilder("Password").required().minLength(6).build(),
             textInputAction: TextInputAction.done,
           ),
           AppSpacing.vsSmall,

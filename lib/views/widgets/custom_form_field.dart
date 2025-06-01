@@ -36,6 +36,7 @@ class CustomFormField extends StatefulWidget {
   final Color? outlineColor;
   final Color? focusOutlineColor;
   final double? borderRadius;
+  final bool collapseError;
 
   const CustomFormField({
     super.key,
@@ -66,6 +67,7 @@ class CustomFormField extends StatefulWidget {
     this.outlineColor = AppColors.greyMedium,
     this.focusOutlineColor = AppColors.neutral,
     this.borderRadius,
+    this.collapseError = true,
   });
 
   @override
@@ -188,7 +190,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
       hintStyle: inputTheme.hintStyle?.copyWith(
         color: isEffectivelyEnabled ? AppColors.grey500 : AppColors.grey400,
       ),
-      errorStyle: const TextStyle(fontSize: 0, height: 0),
+      errorStyle: const TextStyle(fontSize: 0, height: 12),
       filled: true,
       fillColor: fillColor,
       contentPadding: effectiveContentPadding,
@@ -262,11 +264,12 @@ class _CustomFormFieldState extends State<CustomFormField> {
             textAlignVertical: TextAlignVertical.center,
           ),
         ),
-        if (_errorText != null && isEffectivelyEnabled)
+        if (widget.collapseError && _errorText != null && isEffectivelyEnabled ||
+            !widget.collapseError)
           Padding(
             padding: const EdgeInsets.only(top: AppSpacing.xs / 2, left: AppSpacing.s / 2),
             child: Text(
-              _errorText!,
+              _errorText != null ? _errorText! : '',
               style: AppTypography.caption.copyWith(color: AppColors.error),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
