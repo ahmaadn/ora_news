@@ -38,11 +38,9 @@ class _SignInPageState extends State<SignInPage> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      // Proses login di sini
       String email = _emailController.text;
       String password = _passwordController.text;
       log('Email: $email, Password: $password');
-      // Contoh: panggil service login
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Processing Sign In...')));
@@ -56,6 +54,7 @@ class _SignInPageState extends State<SignInPage> {
 
   void _navigateToRegister() {
     log('Navigate to Register Screen');
+    context.goNamed(RouteNames.register);
   }
 
   @override
@@ -88,7 +87,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                 ),
               ),
-              AppSpacing.vsLarge, // Jarak sebelum tombol
+              AppSpacing.vsLarge,
               SignInBottomActions(
                 onContinuePressed: _submitForm,
                 onRegisterPressed: _navigateToRegister,
