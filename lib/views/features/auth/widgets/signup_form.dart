@@ -91,6 +91,7 @@ class SignUpForm extends StatelessWidget {
             controller: confirmPasswordController,
             labelText: "Confirmation Password",
             hintText: 'Confirm your password',
+            obscureText: true,
             validator:
                 FieldValidatorBuilder('Confirmation Password')
                     .required()
