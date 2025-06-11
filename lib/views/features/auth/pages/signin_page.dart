@@ -49,6 +49,7 @@ class _SignInPageState extends State<SignInPage> {
 
   void _forgotPassword() {
     log('Navigate to Forgot Password Screen');
+    context.goNamed(RouteNames.forgetPassword);
   }
 
   void _navigateToRegister() {
@@ -67,22 +68,20 @@ class _SignInPageState extends State<SignInPage> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  child: Form(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        HeaderPage(title: 'Sign in'),
-                        AppSpacing.vsXLarge,
-                        SignInForm(
-                          formKey: _formKey,
-                          emailController: _emailController,
-                          passwordController: _passwordController,
-                          obscurePassword: _obscurePassword,
-                          onTogglePasswordVisibility: _togglePasswordVisibility,
-                          onForgotPassword: _forgotPassword,
-                        ),
-                      ],
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      HeaderPage(title: 'Sign in'),
+                      AppSpacing.vsXLarge,
+                      SignInForm(
+                        formKey: _formKey,
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                        obscurePassword: _obscurePassword,
+                        onTogglePasswordVisibility: _togglePasswordVisibility,
+                        onForgotPassword: _forgotPassword,
+                      ),
+                    ],
                   ),
                 ),
               ),

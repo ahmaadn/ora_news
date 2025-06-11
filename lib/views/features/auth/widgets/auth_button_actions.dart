@@ -90,4 +90,19 @@ class AuthButtonActions extends StatelessWidget {
       secondaryButtonText: 'Register',
     );
   }
+
+  factory AuthButtonActions.forgotPassword({
+    required VoidCallback onContinuePressed,
+    required VoidCallback onLoginPressed,
+    // bool isLoading = false,
+  }) {
+    return AuthButtonActions(
+      onPrimaryPressed: onContinuePressed,
+      onSecondaryPressed: onLoginPressed,
+      primaryButtonText: 'Continue',
+      questionText: "Already have an account?",
+      secondaryButtonText: 'Login',
+      // isLoading: isLoading,
+    );
+  }
 }

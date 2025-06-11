@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/constants/route_names.dart';
+import 'package:ora_news/views/features/auth/pages/forget_password_page.dart';
 import 'package:ora_news/views/features/auth/pages/signin_page.dart';
 import 'package:ora_news/views/features/auth/pages/signup_page.dart';
 import 'package:ora_news/views/features/introduction/pages/introduction_page.dart';
@@ -43,6 +44,11 @@ class AppRouter {
           path: '/auth/signup',
           name: RouteNames.register,
           pageBuilder: (context, state) => MaterialPage(child: SignUpPage()),
+        ),
+        GoRoute(
+          path: '/auth/forget-password',
+          name: RouteNames.forgetPassword,
+          pageBuilder: (context, state) => MaterialPage(child: ForgetPasswordPage()),
         ),
       ],
     );
