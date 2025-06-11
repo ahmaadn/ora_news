@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/views/features/introduction/model/introduction_content_model.dart';
 import 'package:ora_news/views/features/introduction/widgets/page_content.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -15,25 +16,25 @@ class IntroductionPage extends StatefulWidget {
 }
 
 class _IntroductionPageState extends State<IntroductionPage> {
-  final List<Map<String, dynamic>> _pages = [
-    {
-      'imageUrl': 'assets/images/intro 1.png',
-      'heading': 'Selamat Datang di OraNews',
-      'body':
+  final List<IntroductionContentModel> _pages = [
+    IntroductionContentModel(
+      imageUrl: 'assets/images/intro 1.png',
+      heading: 'Selamat Datang di OraNews',
+      body:
           'Dapatkan berita terbaru, tercepat, dan terpercaya dari seluruh penjuru Nusantar',
-    },
-    {
-      'imageUrl': 'assets/images/intro 2.png',
-      'heading': 'Berita yang Relevan, Bukan Cuma Viral',
-      'body':
+    ),
+    IntroductionContentModel(
+      imageUrl: 'assets/images/intro 2.png',
+      heading: 'Berita yang Relevan, Bukan Cuma Viral',
+      body:
           'Kami menyaring informasi, supaya kamu nggak kebanjiran berita palsu. Pilih topik favoritmu: politik, teknologi, budaya, utawa olahraga – kabeh ana!',
-    },
-    {
-      'imageUrl': 'assets/images/intro 3.png',
-      'heading': 'Waktumu Berharga, Bacamu Gak Perlu Lama',
-      'body':
-          'Kami tahu kamu sibuk. Makanya, OraNews dirancang supaya kamu bisa baca berita dalam hitungan detik. Ringkas, ringan, dan enak dilihat.',
-    },
+    ),
+    IntroductionContentModel(
+      imageUrl: 'assets/images/intro 3.png',
+      heading: 'Waktumu Berharga, Bacamu Gak Perlu Lama',
+      body:
+          'Kami tahu kamu sibuk. Makanya, OraNews dirancang supaya kamu bisa baca berita dalam hitungan detik. Ringkas, ringan, dan enak dilihat',
+    ),
   ];
 
   final PageController _pageController = PageController();
