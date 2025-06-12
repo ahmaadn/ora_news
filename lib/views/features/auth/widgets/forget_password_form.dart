@@ -38,8 +38,9 @@ class ForgetPasswordForm extends StatelessWidget {
             boxSize: FormFieldSize.large,
             validator: FieldValidatorBuilder('Email').required().email().build(),
             textInputAction: TextInputAction.next,
+            collapseError: false,
           ),
-          AppSpacing.vsLarge,
+          AppSpacing.vsSmall,
           CustomFormField(
             controller: newPasswordController,
             labelText: 'New Password',
@@ -60,8 +61,9 @@ class ForgetPasswordForm extends StatelessWidget {
                   'Password',
                 ).required().minLength(8).containsNumber().build(),
             textInputAction: TextInputAction.next,
+            collapseError: false,
           ),
-          AppSpacing.vsLarge,
+          AppSpacing.vsSmall,
           CustomFormField(
             controller: confirmPasswordController,
             labelText: 'Confirmation new Password',
@@ -77,6 +79,7 @@ class ForgetPasswordForm extends StatelessWidget {
                     )
                     .build(),
             textInputAction: TextInputAction.done,
+            collapseError: false,
           ),
         ],
       ),
