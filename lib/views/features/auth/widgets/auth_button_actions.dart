@@ -16,7 +16,6 @@ class AuthButtonActions extends StatelessWidget {
   final Color foregroundColor;
   final double width;
   final CustomButtonSize buttonSize;
-
   const AuthButtonActions({
     super.key,
     required this.onPrimaryPressed,
@@ -94,7 +93,6 @@ class AuthButtonActions extends StatelessWidget {
   factory AuthButtonActions.forgotPassword({
     required VoidCallback onContinuePressed,
     required VoidCallback onLoginPressed,
-    // bool isLoading = false,
   }) {
     return AuthButtonActions(
       onPrimaryPressed: onContinuePressed,
@@ -102,7 +100,6 @@ class AuthButtonActions extends StatelessWidget {
       primaryButtonText: 'Continue',
       questionText: "Already have an account?",
       secondaryButtonText: 'Login',
-      // isLoading: isLoading,
     );
   }
 }

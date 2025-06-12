@@ -26,7 +26,6 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   final _confirmPasswordController = TextEditingController();
 
   bool _obscureNewPassword = true;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -52,10 +51,6 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     FocusScope.of(context).unfocus();
 
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
       // Simulasi proses API call
       await Future.delayed(const Duration(seconds: 2));
 
