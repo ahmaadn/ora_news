@@ -73,6 +73,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    AppSpacing.vsLarge,
                     HeaderPage(title: "Sign Up"),
                     AppSpacing.vsXLarge,
                     SignUpForm(

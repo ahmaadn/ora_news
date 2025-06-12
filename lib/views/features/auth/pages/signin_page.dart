@@ -71,6 +71,7 @@ class _SignInPageState extends State<SignInPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      AppSpacing.vsLarge,
                       HeaderPage(title: 'Sign in'),
                       AppSpacing.vsXLarge,
                       SignInForm(

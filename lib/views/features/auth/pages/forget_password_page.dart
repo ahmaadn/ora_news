@@ -83,35 +83,36 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
         child: Stack(
           children: [
             Padding(
-          padding: const EdgeInsets.all(AppSpacing.m * 1.5),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      HeaderPage(title: 'Forget Password'),
-                      AppSpacing.vsXLarge,
-                      ForgetPasswordForm(
-                        formKey: _formKey,
-                        emailController: _emailController,
-                        newPasswordController: _newPasswordController,
-                        confirmPasswordController: _confirmPasswordController,
-                        onTogglePasswordVisibility: _toggleNewPasswordVisibility,
-                        obscureNewPassword: _obscureNewPassword,
+              padding: const EdgeInsets.all(AppSpacing.m * 1.5),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          AppSpacing.vsLarge,
+                          HeaderPage(title: 'Forget Password'),
+                          AppSpacing.vsXLarge,
+                          ForgetPasswordForm(
+                            formKey: _formKey,
+                            emailController: _emailController,
+                            newPasswordController: _newPasswordController,
+                            confirmPasswordController: _confirmPasswordController,
+                            onTogglePasswordVisibility: _toggleNewPasswordVisibility,
+                            obscureNewPassword: _obscureNewPassword,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  AppSpacing.vsLarge,
+                  AuthButtonActions.forgotPassword(
+                    onContinuePressed: _submitForm,
+                    onLoginPressed: _navigateToLogin,
+                  ),
+                  AppSpacing.vsMedium,
+                ],
               ),
-              AppSpacing.vsLarge,
-              AuthButtonActions.forgotPassword(
-                onContinuePressed: _submitForm,
-                onLoginPressed: _navigateToLogin,
-              ),
-              AppSpacing.vsMedium,
-            ],
-          ),
             ),
             Padding(
               padding: const EdgeInsets.all(AppSpacing.s),
