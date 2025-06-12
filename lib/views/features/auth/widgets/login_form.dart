@@ -5,7 +5,7 @@ import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/utils/field_validator_builder.dart';
 import 'package:ora_news/views/widgets/custom_form_field.dart';
 
-class SignInForm extends StatelessWidget {
+class LoginForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
   final TextEditingController passwordController;
@@ -13,7 +13,7 @@ class SignInForm extends StatelessWidget {
   final VoidCallback onTogglePasswordVisibility;
   final VoidCallback onForgotPassword;
 
-  const SignInForm({
+  const LoginForm({
     super.key,
     required this.formKey,
     required this.emailController,

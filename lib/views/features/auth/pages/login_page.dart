@@ -7,16 +7,16 @@ import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/views/features/auth/widgets/auth_button_actions.dart';
 import 'package:ora_news/views/features/auth/widgets/header_page.dart';
-import 'package:ora_news/views/features/auth/widgets/signin_form.dart';
+import 'package:ora_news/views/features/auth/widgets/login_form.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -72,9 +72,9 @@ class _SignInPageState extends State<SignInPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       AppSpacing.vsLarge,
-                      HeaderPage(title: 'Sign in'),
+                      HeaderPage(title: 'Login'),
                       AppSpacing.vsXLarge,
-                      SignInForm(
+                      LoginForm(
                         formKey: _formKey,
                         emailController: _emailController,
                         passwordController: _passwordController,

@@ -4,7 +4,7 @@ import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/utils/field_validator_builder.dart';
 import 'package:ora_news/views/widgets/custom_form_field.dart';
 
-class SignUpForm extends StatelessWidget {
+class RegisterForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController fullNameController;
   final TextEditingController emailController;
@@ -15,7 +15,7 @@ class SignUpForm extends StatelessWidget {
   final VoidCallback onTogglePasswordVisibility;
   final VoidCallback onSubmitForm;
 
-  const SignUpForm({
+  const RegisterForm({
     super.key,
     required this.formKey,
     required this.fullNameController,

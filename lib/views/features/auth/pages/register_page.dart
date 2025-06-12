@@ -7,16 +7,16 @@ import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/views/features/auth/widgets/auth_button_actions.dart';
 import 'package:ora_news/views/features/auth/widgets/header_page.dart';
-import 'package:ora_news/views/features/auth/widgets/signup_form.dart';
+import 'package:ora_news/views/features/auth/widgets/register_form.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -74,9 +74,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     AppSpacing.vsLarge,
-                    HeaderPage(title: "Sign Up"),
+                    HeaderPage(title: "Register"),
                     AppSpacing.vsXLarge,
-                    SignUpForm(
+                    RegisterForm(
                       formKey: _formKey,
                       fullNameController: _fullNameController,
                       emailController: _emailController,
