@@ -43,6 +43,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   }
 
   void _navigateToLogin() {
+    log("Navigate to Login Screen");
     context.goNamed(RouteNames.login);
   }
 
@@ -104,11 +105,12 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   ),
                 ),
               ),
+              AppSpacing.vsLarge,
               AuthButtonActions.forgotPassword(
                 onContinuePressed: _submitForm,
                 onLoginPressed: _navigateToLogin,
-                // isLoading: _isLoading,
               ),
+              AppSpacing.vsMedium,
             ],
           ),
         ),

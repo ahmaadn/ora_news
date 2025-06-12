@@ -56,7 +56,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _navigateToLogin() {
-    log('Navigate to Register Screen');
+    log('Navigate to Login Screen');
     context.goNamed(RouteNames.login);
   }
 
@@ -87,11 +87,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       onSubmitForm: _submitForm,
                     ),
                     AppSpacing.vsLarge,
-                    AppSpacing.vsLarge,
                     AuthButtonActions.signUp(
                       onContinuePressed: _submitForm,
                       onLoginPressed: _navigateToLogin,
                     ),
+                    AppSpacing.vsMedium,
                   ],
                 ),
               ),
