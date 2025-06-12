@@ -37,6 +37,7 @@ class SignInForm extends StatelessWidget {
             keyboardType: TextInputType.emailAddress,
             validator: FieldValidatorBuilder('Email').required().email().build(),
             textInputAction: TextInputAction.next,
+            boxSize: FormFieldSize.large,
             collapseError: false,
           ),
           AppSpacing.vsSmall,
@@ -45,6 +46,7 @@ class SignInForm extends StatelessWidget {
             labelText: 'Password',
             hintText: 'Enter your password',
             obscureText: obscurePassword,
+            boxSize: FormFieldSize.large,
             collapseError: false,
             suffixIcon: IconButton(
               icon: Icon(

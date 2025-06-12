@@ -44,6 +44,7 @@ class SignUpForm extends StatelessWidget {
             validator: FieldValidatorBuilder('Full Name').required().minLength(3).build(),
             textInputAction: TextInputAction.next,
             collapseError: false,
+            boxSize: FormFieldSize.large,
           ),
           AppSpacing.vsSmall,
           CustomFormField(
@@ -54,6 +55,7 @@ class SignUpForm extends StatelessWidget {
             validator: FieldValidatorBuilder('Email').required().email().build(),
             textInputAction: TextInputAction.next,
             collapseError: false,
+            boxSize: FormFieldSize.large,
           ),
           AppSpacing.vsSmall,
           CustomFormField(
@@ -65,6 +67,7 @@ class SignUpForm extends StatelessWidget {
                 FieldValidatorBuilder('Phone Number').required().minLength(8).build(),
             textInputAction: TextInputAction.next,
             collapseError: false,
+            boxSize: FormFieldSize.large,
           ),
           AppSpacing.vsSmall,
           CustomFormField(
@@ -85,6 +88,7 @@ class SignUpForm extends StatelessWidget {
                 ).required().minLength(8).containsNumber().containsUppercase().build(),
             textInputAction: TextInputAction.next,
             collapseError: false,
+            boxSize: FormFieldSize.large,
           ),
           AppSpacing.vsSmall,
           CustomFormField(
@@ -102,6 +106,7 @@ class SignUpForm extends StatelessWidget {
                     .build(),
             textInputAction: TextInputAction.done,
             collapseError: false,
+            boxSize: FormFieldSize.large,
           ),
         ],
       ),
