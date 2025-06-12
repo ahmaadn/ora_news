@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/views/features/introduction/model/introduction_content_model.dart';
 import 'package:ora_news/views/features/introduction/widgets/page_content.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -65,11 +67,13 @@ class _IntroductionPageState extends State<IntroductionPage> {
       );
     } else {
       log('Navigate to Login Screen');
+      context.goNamed(RouteNames.login);
     }
   }
 
   void _skipOnboarding() {
     log('Skip onboarding, navigate to Home Screen');
+    context.goNamed(RouteNames.login);
   }
 
   @override

@@ -52,8 +52,11 @@ class AppSpacing {
 
   // Tinggi Elemen (Element Heights)
   // Contoh: tinggi standar untuk tombol atau input field
-  static const double buttonHeight = 48.0;
-  static const double inputHeight = 56.0;
+  static const double boxXSmall = 28;
+  static const double boxSmall = 32;
+  static const double boxMedium = 36;
+  static const double boxLarge = 44;
+  static const double boxXLarge = 52;
 
   // Divider
   static const double dividerThickness = 1.0;
