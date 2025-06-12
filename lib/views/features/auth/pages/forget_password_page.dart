@@ -11,6 +11,8 @@ import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/views/features/auth/widgets/auth_button_actions.dart';
 import 'package:ora_news/views/features/auth/widgets/forget_password_form.dart';
 import 'package:ora_news/views/features/auth/widgets/header_page.dart';
+import 'package:ora_news/views/widgets/app_button.dart';
+import 'package:ora_news/views/widgets/custom_button.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
@@ -78,7 +80,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     return Scaffold(
       backgroundColor: AppColors.surface, // Latar belakang putih
       body: SafeArea(
-        child: Padding(
+        child: Stack(
+          children: [
+            Padding(
           padding: const EdgeInsets.all(AppSpacing.m * 1.5),
           child: Column(
             children: [
@@ -108,6 +112,19 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
               AppSpacing.vsMedium,
             ],
           ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.s),
+              child: GhostButton(
+                onPressed: _navigateToLogin,
+                text: "Back",
+                icon: Icon(Icons.arrow_back),
+                buttonSize: CustomButtonSize.medium,
+                foregroundColor: AppColors.textPrimary,
+                // buttonShape: CustomButtonShape.pill,
+              ),
+            ),
+          ],
         ),
       ),
     );
