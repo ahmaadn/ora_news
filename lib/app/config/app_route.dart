@@ -6,6 +6,7 @@ import 'package:ora_news/views/features/auth/pages/login_page.dart';
 import 'package:ora_news/views/features/auth/pages/register_page.dart';
 import 'package:ora_news/views/features/introduction/pages/introduction_page.dart';
 import 'package:ora_news/views/features/introduction/pages/splash_page.dart';
+import 'package:ora_news/views/features/main/pages/main_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -49,6 +50,30 @@ class AppRouter {
           path: '/auth/forget-password',
           name: RouteNames.forgetPassword,
           pageBuilder: (context, state) => MaterialPage(child: ForgetPasswordPage()),
+        ),
+        GoRoute(
+          path: '/home',
+          name: RouteNames.home,
+          pageBuilder:
+              (context, state) => MaterialPage(child: MainPage(index: 0)), // Home Page
+        ),
+        GoRoute(
+          path: '/discover',
+          name: RouteNames.discover,
+          pageBuilder:
+              (context, state) => MaterialPage(child: MainPage(index: 1)), // Discover Page
+        ),
+        GoRoute(
+          path: '/discover',
+          name: RouteNames.favorite,
+          pageBuilder:
+              (context, state) => MaterialPage(child: MainPage(index: 2)), // Favorite Page
+        ),
+        GoRoute(
+          path: '/profile',
+          name: RouteNames.profile,
+          pageBuilder:
+              (context, state) => MaterialPage(child: MainPage(index: 3)), // Profile Page
         ),
       ],
     );
