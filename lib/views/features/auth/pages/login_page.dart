@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Processing Sign In...')));
-      context.goNamed(RouteNames.register);
+      context.goNamed(RouteNames.home);
     }
   }
 
