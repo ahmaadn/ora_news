@@ -37,6 +37,7 @@ class CustomFormField extends StatefulWidget {
   final Color? focusOutlineColor;
   final double? borderRadius;
   final bool collapseError;
+  final Function(String)? onFieldSubmitted;
 
   const CustomFormField({
     super.key,
@@ -68,6 +69,7 @@ class CustomFormField extends StatefulWidget {
     this.focusOutlineColor = AppColors.neutral,
     this.borderRadius,
     this.collapseError = true,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -262,6 +264,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
             textCapitalization: widget.textCapitalization,
             style: effectiveTextStyle,
             textAlignVertical: TextAlignVertical.center,
+            onFieldSubmitted: widget.onFieldSubmitted,
           ),
         ),
         if (widget.collapseError && _errorText != null && isEffectivelyEnabled ||
