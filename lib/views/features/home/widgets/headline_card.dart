@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
@@ -24,16 +25,25 @@ class HeadlineCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              imageUrl,
+            CachedNetworkImage(
+              imageUrl: imageUrl,
               fit: BoxFit.cover,
-
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: AppColors.grey200,
-                  child: const Icon(Icons.image_not_supported, color: AppColors.grey400),
-                );
-              },
+              imageBuilder:
+                  (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                    ),
+                  ),
+              placeholder:
+                  (context, url) => Container(
+                    color: AppColors.grey200,
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+              errorWidget:
+                  (context, url, error) => Container(
+                    color: AppColors.grey200,
+                    child: const Icon(Icons.image_not_supported, color: AppColors.grey400),
+                  ),
             ),
             // Gradient overlay
             Container(

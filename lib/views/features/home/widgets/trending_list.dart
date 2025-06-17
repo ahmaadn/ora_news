@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
@@ -26,11 +27,30 @@ class TrendingList extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(AppSpacing.roundedMedium),
-                child: Image.network(
-                  trending['image']!,
+                child: CachedNetworkImage(
+                  imageUrl: trending['image']!,
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
+                  imageBuilder:
+                      (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                        ),
+                      ),
+                  placeholder:
+                      (context, url) => Container(
+                        color: AppColors.grey200,
+                        child: const Center(child: CircularProgressIndicator()),
+                      ),
+                  errorWidget:
+                      (context, url, error) => Container(
+                        color: AppColors.grey200,
+                        child: const Icon(
+                          Icons.image_not_supported,
+                          color: AppColors.grey400,
+                        ),
+                      ),
                 ),
               ),
               AppSpacing.vsMedium,
