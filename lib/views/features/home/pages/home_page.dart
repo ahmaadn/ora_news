@@ -16,10 +16,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late final TabController _tabController;
 
-  // Mock data untuk UI, ini bisa berasal dari state management atau API call
+  @override
+  bool get wantKeepAlive => true;
+
   final List<Map<String, String>> _headlinesData = [
     {
       'image': 'https://picsum.photos/600/400?random=1',
@@ -73,6 +76,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
