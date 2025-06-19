@@ -5,6 +5,17 @@ class ApiConstants {
   static const String loginEndpoint = '/auth/login';
   static const String registerEndpoint = '/auth/register';
   static const String requestPasswordChangeEndpoint = '/auth/request-password-change';
+  static const String newsPublicEndpoint = '/news';
+  static const String categoryEndpoint = '/category';
+
+  static const Map<String, dynamic> defaultParamNews = {
+    'page': 1,
+    'per_page': 20,
+    'category': '',
+    'author': '',
+    'search': '',
+    'latest': true,
+  };
 
   static Future<Map<String, String>> get authHeaders async {
     var token = await TokenManager.getTokens();

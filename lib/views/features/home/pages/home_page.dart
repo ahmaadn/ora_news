@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/data/provider/news_public_provider.dart';
 import 'package:ora_news/views/features/home/widgets/headline_carousel.dart';
 import 'package:ora_news/views/features/home/widgets/highlights_list.dart';
 import 'package:ora_news/views/features/home/widgets/section_header.dart';
 import 'package:ora_news/views/features/home/widgets/trending_list.dart';
 import 'package:ora_news/views/widgets/custom_button.dart';
 import 'package:ora_news/views/widgets/main_app_bar.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -66,6 +68,8 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 6, vsync: this);
+
+    Future.microtask(() => context.read<NewsPublicProvider>().fetchHomeData());
   }
 
   @override

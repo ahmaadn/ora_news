@@ -1,12 +1,64 @@
 import 'package:ora_news/data/models/user_models.dart';
 
+class PaginationNews {
+  final int count;
+  final List<NewsArticle> items;
+  final int currPage;
+  final int totalPage;
+  final String? nextPage;
+  final String? previousPage;
+
+  PaginationNews({
+    required this.count,
+    required this.items,
+    required this.currPage,
+    required this.totalPage,
+    this.nextPage,
+    this.previousPage,
+  });
+
+  PaginationNews copyWith({
+    int? count,
+    List<NewsArticle>? items,
+    int? currPage,
+    int? totalPage,
+    String? nextPage,
+    dynamic previousPage,
+  }) => PaginationNews(
+    count: count ?? this.count,
+    items: items ?? this.items,
+    currPage: currPage ?? this.currPage,
+    totalPage: totalPage ?? this.totalPage,
+    nextPage: nextPage ?? this.nextPage,
+    previousPage: previousPage ?? this.previousPage,
+  );
+
+  factory PaginationNews.fromJson(Map<String, dynamic> json) => PaginationNews(
+    count: json["count"],
+    items: List<NewsArticle>.from(json['items'].map((x) => NewsArticle.fromJson(x))),
+    currPage: json["curr_page"],
+    totalPage: json["total_page"],
+    nextPage: json["next_page"],
+    previousPage: json["previous_page"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "count": count,
+    "items": List<NewsArticle>.from(items.map((x) => x.toJson())),
+    "curr_page": currPage,
+    "total_page": totalPage,
+    "next_page": nextPage,
+    "previous_page": previousPage,
+  };
+}
+
 class NewsArticle {
   final DateTime createAt;
   final DateTime updateAt;
   final String id;
   final String title;
   final String content;
-  final String imageUrl;
+  String? imageUrl;
   final DateTime publishedAt;
   final CategoryNews category;
   final UserPublic user;
@@ -17,7 +69,7 @@ class NewsArticle {
     required this.id,
     required this.title,
     required this.content,
-    required this.imageUrl,
+    this.imageUrl,
     required this.publishedAt,
     required this.category,
     required this.user,
@@ -67,6 +119,26 @@ class NewsArticle {
     "published_at": publishedAt.toIso8601String(),
     "category": category.toJson(),
     "user": user.toJson(),
+  };
+}
+
+class ListCategoryNews {
+  final int totalCount;
+  final List<CategoryNews> data;
+
+  ListCategoryNews({required this.totalCount, required this.data});
+
+  ListCategoryNews copyWith({int? totalCount, List<CategoryNews>? data}) =>
+      ListCategoryNews(totalCount: totalCount ?? this.totalCount, data: data ?? this.data);
+
+  factory ListCategoryNews.fromJson(Map<String, dynamic> json) => ListCategoryNews(
+    totalCount: json["total_count"],
+    data: List<CategoryNews>.from(json["data"].map((x) => CategoryNews.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "total_count": totalCount,
+    "data": List<dynamic>.from(data.map((x) => x.toJson())),
   };
 }
 
