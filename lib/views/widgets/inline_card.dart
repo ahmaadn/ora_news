@@ -4,11 +4,12 @@ import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/utils/image_placeholder.dart';
+import 'package:ora_news/data/models/news_models.dart';
 
 class InlineCard extends StatelessWidget {
   const InlineCard({super.key, required this.highlight});
 
-  final Map<String, String> highlight;
+  final NewsArticle highlight;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,9 @@ class InlineCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(AppSpacing.roundedMedium),
             child: CachedNetworkImage(
-              imageUrl: highlight['image']!,
+              imageUrl:
+                  highlight.imageUrl ??
+                  "https://placehold.co/120x120/E9446A/FFFFFF/png?text=News",
               width: 100,
               height: 100,
               fit: BoxFit.cover,
@@ -42,14 +45,14 @@ class InlineCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    highlight['title']!,
-                    maxLines: 3,
+                    highlight.title,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.subtitle1.copyWith(height: 1.4),
                   ),
                   AppSpacing.vsSmall,
                   Text(
-                    '${highlight['source']} • ${highlight['date']}',
+                    '${highlight.user.name} • ${highlight.publishedAt}',
                     style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
                   ),
                 ],

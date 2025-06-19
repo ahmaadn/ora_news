@@ -4,11 +4,12 @@ import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/utils/image_placeholder.dart';
+import 'package:ora_news/data/models/news_models.dart';
 
 class NewsCard extends StatelessWidget {
   const NewsCard({super.key, required this.trending});
 
-  final Map<String, String> trending;
+  final NewsArticle trending;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,9 @@ class NewsCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(AppSpacing.roundedMedium),
             child: CachedNetworkImage(
-              imageUrl: trending['image']!,
+              imageUrl:
+                  trending.imageUrl ??
+                  "https://placehold.co/120x120/E9446A/FFFFFF/png?text=News",
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -36,12 +39,12 @@ class NewsCard extends StatelessWidget {
           ),
           AppSpacing.vsMedium,
           Text(
-            trending['source']!,
+            trending.user.name!,
             style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
           ),
           AppSpacing.vsSmall,
           Text(
-            trending['title']!,
+            trending.title,
             maxLines: 2,
             style: AppTypography.headline3.copyWith(height: 1.4),
           ),
@@ -50,7 +53,7 @@ class NewsCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                trending['source']!,
+                trending.publishedAt.toString(),
                 style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
               ),
               TextButton(

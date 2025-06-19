@@ -4,19 +4,22 @@ import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/utils/image_placeholder.dart';
+import 'package:ora_news/data/models/news_models.dart';
 
 class HeadlineCard extends StatelessWidget {
-  final Map<String, String> headline;
+  final NewsArticle headline;
 
   const HeadlineCard({super.key, required this.headline});
 
   @override
   Widget build(BuildContext context) {
     final imageUrl =
-        headline['image'] ?? 'https://placehold.co/600x400/grey/white?text=No+Image';
-    final title = headline['title'] ?? 'No Title Available';
-    final date = headline['date'] ?? '';
-    final timeAgo = headline['time_ago'] ?? '';
+        headline.imageUrl ?? 'https://placehold.co/600x400/grey/white?text=No+Image';
+    final title = headline.title;
+    final date =
+        '${headline.publishedAt.day.toString().padLeft(2, '0')}/${headline.publishedAt.month.toString().padLeft(2, '0')}' ??
+        '';
+    final source = "By ${headline.user.name}";
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
@@ -66,11 +69,11 @@ class HeadlineCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        date,
+                        source,
                         style: AppTypography.caption.copyWith(color: AppColors.grey300),
                       ),
                       Text(
-                        timeAgo,
+                        date,
                         style: AppTypography.caption.copyWith(color: AppColors.grey300),
                       ),
                     ],

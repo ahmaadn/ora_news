@@ -2,12 +2,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
+import 'package:ora_news/data/models/news_models.dart';
 
 import 'package:ora_news/views/features/home/widgets/headline_card.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HeadlineCarousel extends StatefulWidget {
-  final List<Map<String, String>> headlines;
+  final List<NewsArticle> headlines;
 
   const HeadlineCarousel({super.key, required this.headlines});
 
