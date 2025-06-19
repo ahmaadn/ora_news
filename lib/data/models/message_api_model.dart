@@ -10,7 +10,7 @@ class MessageApiModel<T> {
   }
 
   factory MessageApiModel.error({required String message}) {
-    return MessageApiModel(success: false, message: message, data: Null as T);
+    return MessageApiModel(success: false, message: message, data: null as T);
   }
   Map<String, dynamic> toJson() {
     return {'success': success, 'message': message, 'data': data};
