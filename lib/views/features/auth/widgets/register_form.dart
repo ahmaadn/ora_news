@@ -8,24 +8,22 @@ class RegisterForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController fullNameController;
   final TextEditingController emailController;
-  final TextEditingController phoneNumberController;
+  final TextEditingController usernameController;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
   final bool obscurePassword;
   final VoidCallback onTogglePasswordVisibility;
-  final VoidCallback onSubmitForm;
 
   const RegisterForm({
     super.key,
     required this.formKey,
     required this.fullNameController,
     required this.emailController,
-    required this.phoneNumberController,
+    required this.usernameController,
     required this.passwordController,
     required this.confirmPasswordController,
     required this.obscurePassword,
     required this.onTogglePasswordVisibility,
-    required this.onSubmitForm,
   });
 
   @override
@@ -59,12 +57,11 @@ class RegisterForm extends StatelessWidget {
           ),
           AppSpacing.vsSmall,
           CustomFormField(
-            controller: phoneNumberController,
-            labelText: "Phone Number",
-            hintText: 'Your phone number',
+            controller: usernameController,
+            labelText: "Username",
+            hintText: 'Your username',
             keyboardType: TextInputType.phone,
-            validator:
-                FieldValidatorBuilder('Phone Number').required().minLength(8).build(),
+            validator: FieldValidatorBuilder('Username').required().minLength(5).build(),
             textInputAction: TextInputAction.next,
             collapseError: false,
             boxSize: FormFieldSize.large,

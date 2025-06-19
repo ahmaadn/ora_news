@@ -5,9 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/constants/route_names.dart';
+import 'package:ora_news/app/utils/app_notif.dart';
+import 'package:ora_news/data/models/auth_models.dart';
+import 'package:ora_news/data/provider/auth_provider.dart';
 import 'package:ora_news/views/features/auth/widgets/auth_button_actions.dart';
 import 'package:ora_news/views/features/auth/widgets/header_page.dart';
 import 'package:ora_news/views/features/auth/widgets/login_form.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -35,15 +39,27 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      String email = _emailController.text;
-      String password = _passwordController.text;
-      log('Email: $email, Password: $password');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Processing Sign In...')));
-      context.goNamed(RouteNames.home);
+  Future<void> _login() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final bool success = await authProvider.login(
+        Login(username: _emailController.text, password: _passwordController.text),
+      );
+
+      if (success) {
+        if (mounted) {
+          AppNotif.success(context, message: 'Login berhasil');
+          context.goNamed(RouteNames.home);
+        }
+      } else {
+        if (mounted) {
+          AppNotif.error(
+            context,
+            message: authProvider.errorMessage ?? 'Login gagal.',
+            duration: const Duration(seconds: 3),
+          );
+        }
+      }
     }
   }
 
@@ -74,22 +90,32 @@ class _LoginPageState extends State<LoginPage> {
                       AppSpacing.vsLarge,
                       HeaderPage(title: 'Login'),
                       AppSpacing.vsXLarge,
-                      LoginForm(
-                        formKey: _formKey,
-                        emailController: _emailController,
-                        passwordController: _passwordController,
-                        obscurePassword: _obscurePassword,
-                        onTogglePasswordVisibility: _togglePasswordVisibility,
-                        onForgotPassword: _forgotPassword,
+                      Consumer<AuthProvider>(
+                        builder: (context, authProvider, child) {
+                          return LoginForm(
+                            formKey: _formKey,
+                            emailController: _emailController,
+                            passwordController: _passwordController,
+                            obscurePassword: _obscurePassword,
+                            onTogglePasswordVisibility: _togglePasswordVisibility,
+                            onForgotPassword: _forgotPassword,
+                          );
+                        },
                       ),
                     ],
                   ),
                 ),
               ),
               AppSpacing.vsLarge,
-              AuthButtonActions.signIn(
-                onContinuePressed: _submitForm,
-                onRegisterPressed: _navigateToRegister,
+              Consumer<AuthProvider>(
+                builder: (context, authProvider, child) {
+                  return AuthButtonActions.signIn(
+                    onContinuePressed: authProvider.isLoading ? () {} : _login,
+                    onRegisterPressed: _navigateToRegister,
+                    isLoading: authProvider.isLoading,
+                    isDisabled: authProvider.isLoading,
+                  );
+                },
               ),
               AppSpacing.vsMedium,
             ],

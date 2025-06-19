@@ -16,6 +16,9 @@ class AuthButtonActions extends StatelessWidget {
   final Color foregroundColor;
   final double width;
   final CustomButtonSize buttonSize;
+  final bool isLoading;
+  final bool isDisabled;
+
   const AuthButtonActions({
     super.key,
     required this.onPrimaryPressed,
@@ -27,6 +30,8 @@ class AuthButtonActions extends StatelessWidget {
     this.foregroundColor = AppColors.textLight,
     this.width = double.infinity,
     this.buttonSize = CustomButtonSize.medium,
+    this.isLoading = false,
+    this.isDisabled = false,
   });
 
   @override
@@ -80,11 +85,14 @@ class AuthButtonActions extends StatelessWidget {
   factory AuthButtonActions.signIn({
     required VoidCallback onContinuePressed,
     required VoidCallback onRegisterPressed,
+    String buttonString = 'Continue',
+    bool isLoading = false,
+    bool isDisabled = false,
   }) {
     return AuthButtonActions(
       onPrimaryPressed: onContinuePressed,
       onSecondaryPressed: onRegisterPressed,
-      primaryButtonText: 'Continue',
+      primaryButtonText: buttonString,
       questionText: "Don't have an account?",
       secondaryButtonText: 'Register',
     );
