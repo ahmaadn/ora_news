@@ -11,7 +11,9 @@ class NewsPublicProvider with ChangeNotifier {
   List<NewsArticle> _trending = [];
   List<NewsArticle> _highlights = [];
   List<CategoryNews> _categories = [];
-  List<NewsArticle> _newsByCategory = []; // Berita yang difilter berdasarkan kategori
+  List<NewsArticle> _newsByCategory = [];
+  List<NewsArticle> _newsBySearch = [];
+  List<String> _recentSearches = [];
 
   // State untuk kategori yang dipilih
   String? _selectedCategoryId;
@@ -27,6 +29,8 @@ class NewsPublicProvider with ChangeNotifier {
   List<NewsArticle> get highlights => _highlights;
   List<CategoryNews> get categories => _categories;
   List<NewsArticle> get newsByCategory => _newsByCategory;
+  List<NewsArticle> get newsBySearch => _newsBySearch;
+  List<String> get recentSearches => _recentSearches;
   String? get selectedCategoryId => _selectedCategoryId;
   bool get isLoading => _isLoading;
   bool get isLoadingCategoryNews => _isLoadingCategoryNews;
@@ -86,6 +90,7 @@ class NewsPublicProvider with ChangeNotifier {
       latest: true,
       category: categoryId,
     );
+    _isLoadingCategoryNews = false;
 
     if (results.success) {
       PaginationNews pagination = results.data;
@@ -103,5 +108,44 @@ class NewsPublicProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<bool> fetchNewsBySearch(String search) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final results = await NewsService.getNews(perPage: 20, latest: true, search: search);
+    _isLoading = false;
+
+    if (results.success) {
+      PaginationNews pagination = results.data;
+      log("Jumlah Artikel ${pagination.items.length}");
+      _newsBySearch = pagination.items;
+      _errorMessage = null;
+      log("Berhasil get news by Search $search");
+      notifyListeners();
+      return true;
+    } else {
+      _errorMessage = "Error fetching news";
+      notifyListeners();
+      return false;
+    }
+  }
+
+  void removeSearchHistory(int index) {
+    _recentSearches.removeAt(index);
+    notifyListeners();
+  }
+
+  void addSearchHistory(String query) {
+    notifyListeners();
+    if (query.trim().isEmpty) return;
+
+    if (!_recentSearches.contains(query)) {
+      _recentSearches.insert(0, query);
+      notifyListeners();
+    }
+    notifyListeners();
   }
 }

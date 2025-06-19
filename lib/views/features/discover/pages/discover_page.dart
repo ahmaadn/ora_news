@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/data/provider/news_public_provider.dart';
 import 'package:ora_news/views/widgets/custom_form_field.dart';
+import 'package:provider/provider.dart';
 
 class DiscoverPage extends StatefulWidget {
   const DiscoverPage({super.key});
@@ -20,36 +22,13 @@ class _DiscoverPageState extends State<DiscoverPage> with AutomaticKeepAliveClie
   @override
   bool get wantKeepAlive => true;
 
-  final List<String> _recentSearches = [
-    'mortgage interest rate',
-    'soccer match result',
-    'rock band comeback',
-    'latest tech news',
-    'flutter best practices',
-  ];
-
-  void _removeSearchHistory(int index) {
-    setState(() {
-      _recentSearches.removeAt(index);
-    });
-  }
-
   void _clearSearch() {
     _searchController.clear();
     FocusScope.of(context).unfocus();
   }
 
   void _performSearch(String query) {
-    if (query.trim().isEmpty) return;
-
-    FocusScope.of(context).unfocus();
-
-    if (!_recentSearches.contains(query)) {
-      setState(() {
-        _recentSearches.insert(0, query);
-      });
-    }
-
+    Provider.of<NewsPublicProvider>(context, listen: false).addSearchHistory(query);
     context.go('/search/results?q=$query');
   }
 
@@ -72,6 +51,7 @@ class _DiscoverPageState extends State<DiscoverPage> with AutomaticKeepAliveClie
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -90,34 +70,38 @@ class _DiscoverPageState extends State<DiscoverPage> with AutomaticKeepAliveClie
                 ),
                 boxSize: FormFieldSize.large,
               ),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
-                  itemCount: _recentSearches.length,
-                  itemBuilder: (context, index) {
-                    final searchTerm = _recentSearches[index];
-                    return ListTile(
-                      contentPadding: EdgeInsets.only(left: AppSpacing.s),
-                      leading: const Icon(Icons.history, color: AppColors.grey500),
-                      title: Text(
-                        searchTerm,
-                        style: AppTypography.bodyText1.copyWith(
-                          fontWeight: AppTypography.medium,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.close, color: AppColors.grey500),
-                        onPressed: () => _removeSearchHistory(index),
-                      ),
-                      onTap: () {
-                        log('Searching for: $searchTerm');
-                        _searchController.text = searchTerm;
-                        _performSearch(searchTerm);
+              Consumer<NewsPublicProvider>(
+                builder: (context, provider, child) {
+                  return Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+                      itemCount: provider.recentSearches.length,
+                      itemBuilder: (context, index) {
+                        final searchTerm = provider.recentSearches[index];
+                        return ListTile(
+                          contentPadding: EdgeInsets.only(left: AppSpacing.s),
+                          leading: const Icon(Icons.history, color: AppColors.grey500),
+                          title: Text(
+                            searchTerm,
+                            style: AppTypography.bodyText1.copyWith(
+                              fontWeight: AppTypography.medium,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.close, color: AppColors.grey500),
+                            onPressed: () => provider.removeSearchHistory(index),
+                          ),
+                          onTap: () {
+                            log('Searching for: $searchTerm');
+                            _searchController.text = searchTerm;
+                            context.go('/search/results?q=$searchTerm');
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
