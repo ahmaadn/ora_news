@@ -7,12 +7,16 @@ import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 
 import 'package:ora_news/app/constants/route_names.dart';
+import 'package:ora_news/app/utils/app_notif.dart';
+import 'package:ora_news/data/models/auth_models.dart';
+import 'package:ora_news/data/provider/auth_provider.dart';
 
 import 'package:ora_news/views/features/auth/widgets/auth_button_actions.dart';
 import 'package:ora_news/views/features/auth/widgets/forget_password_form.dart';
 import 'package:ora_news/views/features/auth/widgets/header_page.dart';
 import 'package:ora_news/views/widgets/app_button.dart';
 import 'package:ora_news/views/widgets/custom_button.dart';
+import 'package:provider/provider.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
@@ -53,25 +57,33 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     FocusScope.of(context).unfocus();
 
     if (_formKey.currentState!.validate()) {
-      // Simulasi proses API call
-      await Future.delayed(const Duration(seconds: 2));
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final bool success = await authProvider.requestPasswordChange(
+        PasswordChange(
+          email: _emailController.text,
+          newPassword: _confirmPasswordController.text,
+        ),
+      );
 
-      // Tampilkan notifikasi
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Silakan cek email Anda untuk konfirmasi perubahan password.'),
-            backgroundColor: AppColors.success,
-          ),
-        );
-      }
-
-      // Timer 5 detik sebelum kembali ke halaman Login
-      Timer(const Duration(seconds: 5), () {
+      if (success) {
         if (mounted) {
+          AppNotif.success(
+            context,
+            message:
+                "Permintaan perubahan password berhasil dikirim. Silakan cek email Anda untuk konfirmasi perubahan password",
+          );
           context.goNamed(RouteNames.login);
         }
-      });
+
+        // Timer 5 detik sebelum kembali ke halaman Login
+      } else {
+        if (mounted) {
+          AppNotif.error(
+            context,
+            message: authProvider.errorMessage ?? 'Gagal meminta perubahan password.',
+          );
+        }
+      }
     }
   }
 
@@ -93,22 +105,30 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                           AppSpacing.vsLarge,
                           HeaderPage(title: 'Forget Password'),
                           AppSpacing.vsXLarge,
-                          ForgetPasswordForm(
-                            formKey: _formKey,
-                            emailController: _emailController,
-                            newPasswordController: _newPasswordController,
-                            confirmPasswordController: _confirmPasswordController,
-                            onTogglePasswordVisibility: _toggleNewPasswordVisibility,
-                            obscureNewPassword: _obscureNewPassword,
+                          Consumer<AuthProvider>(
+                            builder: (context, authProvider, _) {
+                              return ForgetPasswordForm(
+                                formKey: _formKey,
+                                emailController: _emailController,
+                                newPasswordController: _newPasswordController,
+                                confirmPasswordController: _confirmPasswordController,
+                                onTogglePasswordVisibility: _toggleNewPasswordVisibility,
+                                obscureNewPassword: _obscureNewPassword,
+                              );
+                            },
                           ),
                         ],
                       ),
                     ),
                   ),
                   AppSpacing.vsLarge,
-                  AuthButtonActions.forgotPassword(
-                    onContinuePressed: _submitForm,
-                    onLoginPressed: _navigateToLogin,
+                  Consumer<AuthProvider>(
+                    builder: (context, authProvider, _) {
+                      return AuthButtonActions.forgotPassword(
+                        onContinuePressed: _submitForm,
+                        onLoginPressed: _navigateToLogin,
+                      );
+                    },
                   ),
                   AppSpacing.vsMedium,
                 ],

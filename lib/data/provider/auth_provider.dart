@@ -70,4 +70,24 @@ class AuthProvider with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  // Fungsi untuk meminta perubahan password (Forget Password)
+  Future<bool> requestPasswordChange(PasswordChange data) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final result = await AuthService.requestPasswordChange(data);
+
+    _isLoading = false;
+    if (result.success) {
+      _errorMessage = null;
+      notifyListeners();
+      return true;
+    } else {
+      _errorMessage = result.message;
+      notifyListeners();
+      return false;
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:ora_news/app/constants/api_constants.dart';
 import 'package:ora_news/app/utils/token_manager.dart';
@@ -58,6 +59,35 @@ class AuthService {
       }
     } catch (e) {
       return MessageApiModel<Null>.error(message: 'Terjadi kesalahan: $e');
+    }
+  }
+
+  static Future<MessageApiModel> requestPasswordChange(PasswordChange data) async {
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.requestPasswordChangeEndpoint}',
+    );
+    try {
+      final response = await http.post(
+        url,
+        headers: ApiConstants.headers,
+        body: data.toJson(),
+      );
+
+      if (response.statusCode == 202) {
+        return MessageApiModel.success(
+          message:
+              'Permintaan perubahan password berhasil dikirim. Silakan cek email Anda untuk konfirmasi',
+          data: null,
+        );
+      } else {
+        final Map<String, dynamic> errorData = json.decode(response.body);
+        return MessageApiModel.error(
+          message: errorData['detail']['messages'][0] ?? 'Gagal meminta perubahan password',
+        );
+      }
+    } catch (e) {
+      log('AuthService: Terjadi kesalahan saat meminta perubahan password: $e');
+      return MessageApiModel.error(message: 'Terjadi kesalahan: $e');
     }
   }
 }

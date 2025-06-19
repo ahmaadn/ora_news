@@ -4,7 +4,7 @@ class ApiConstants {
   static const String baseUrl = 'https://ora-news.vercel.app/api/v1';
   static const String loginEndpoint = '/auth/login';
   static const String registerEndpoint = '/auth/register';
-  static const String forgotPasswordEndpoint = '/auth/forgot-password';
+  static const String requestPasswordChangeEndpoint = '/auth/request-password-change';
 
   static Future<Map<String, String>> get authHeaders async {
     var token = await TokenManager.getTokens();

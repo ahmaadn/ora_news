@@ -70,3 +70,20 @@ class Register {
     "password": password,
   });
 }
+
+class PasswordChange {
+  final String email;
+  final String newPassword;
+
+  PasswordChange({required this.email, required this.newPassword});
+
+  PasswordChange copyWith({String? email, String? newPassword}) => PasswordChange(
+    email: email ?? this.email,
+    newPassword: newPassword ?? this.newPassword,
+  );
+
+  factory PasswordChange.fromJson(Map<String, dynamic> json) =>
+      PasswordChange(email: json["email"], newPassword: json["new_password"]);
+
+  String toJson() => jsonEncode({"email": email, "new_password": newPassword});
+}
