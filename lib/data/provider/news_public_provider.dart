@@ -15,6 +15,8 @@ class NewsPublicProvider with ChangeNotifier {
   List<NewsArticle> _newsBySearch = [];
   List<String> _recentSearches = [];
 
+  NewsArticle? _newsArticleDetailShow;
+
   // State untuk kategori yang dipilih
   String? _selectedCategoryId;
 
@@ -35,6 +37,8 @@ class NewsPublicProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isLoadingCategoryNews => _isLoadingCategoryNews;
   String? get errorMessage => _errorMessage;
+
+  NewsArticle? get newsArticleDetailShow => _newsArticleDetailShow;
 
   Future<bool> fetchHomeData() async {
     _isLoading = true;
@@ -128,6 +132,28 @@ class NewsPublicProvider with ChangeNotifier {
       return true;
     } else {
       _errorMessage = "Error fetching news";
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> fetchDetailNews(String id) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final results = await NewsService.getDetailNews(id);
+    _isLoading = false;
+
+    if (results.success) {
+      NewsArticle data = results.data;
+      log("News Berhasil di peroleh : ${data.title}");
+      _newsArticleDetailShow = data;
+      _errorMessage = null;
+      notifyListeners();
+      return true;
+    } else {
+      _errorMessage = "Error fetching news Detail";
       notifyListeners();
       return false;
     }

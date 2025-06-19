@@ -23,7 +23,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-
     Future.microtask(() => context.read<NewsPublicProvider>().fetchHomeData());
   }
 

@@ -10,6 +10,7 @@ import 'package:ora_news/views/features/home/pages/home_page.dart';
 import 'package:ora_news/views/features/introduction/pages/introduction_page.dart';
 import 'package:ora_news/views/features/introduction/pages/splash_page.dart';
 import 'package:ora_news/views/features/main/pages/main_page.dart';
+import 'package:ora_news/views/features/news/pages/news_detail_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -80,6 +81,21 @@ class AppRouter {
           path: '/auth/forget-password',
           name: RouteNames.forgetPassword,
           pageBuilder: (context, state) => MaterialPage(child: ForgetPasswordPage()),
+        ),
+
+        GoRoute(
+          path: '/news-detail/:id',
+          name: RouteNames.newsDetail,
+          builder: (context, state) {
+            final newsId = state.pathParameters['id'];
+
+            if (newsId != null) {
+              return NewsDetailPage(newsId: newsId);
+            } else {
+              // Tampilan fallback jika tidak ada artikel yang diteruskan
+              return const Scaffold(body: Center(child: Text("Article not found.")));
+            }
+          },
         ),
 
         StatefulShellRoute.indexedStack(

@@ -78,4 +78,25 @@ class NewsService {
       return MessageApiModel.error(message: 'Failed to load categories: $e');
     }
   }
+
+  static Future<MessageApiModel> getDetailNews(String id) async {
+    final uri = Uri.parse("${ApiConstants.baseUrl}${ApiConstants.newsPublicEndpoint}$id");
+
+    try {
+      final response = await http.get(uri, headers: ApiConstants.headers);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        return MessageApiModel.success(
+          message: "Data berhasil di dapatkan",
+          data: NewsArticle.fromJson(data),
+        );
+      } else {
+        return MessageApiModel.error(message: "Failed to load categories");
+      }
+    } catch (e) {
+      return MessageApiModel.error(message: 'Failed to load categories: $e');
+    }
+  }
 }
