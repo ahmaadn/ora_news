@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 // TOKEN
 class Token {
   final String accessToken;
@@ -61,10 +63,10 @@ class Register {
     password: json["password"],
   );
 
-  Map<String, dynamic> toJson() => {
+  String toJson() => jsonEncode({
     "email": email,
     "username": username,
     "name": name,
     "password": password,
-  };
+  });
 }
