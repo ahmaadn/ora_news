@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/app/utils/image_placeholder.dart';
 
 class HeadlineCard extends StatelessWidget {
   final Map<String, String> headline;
@@ -11,7 +12,6 @@ class HeadlineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Memastikan data yang diperlukan tidak null, dengan nilai default jika null
     final imageUrl =
         headline['image'] ?? 'https://placehold.co/600x400/grey/white?text=No+Image';
     final title = headline['title'] ?? 'No Title Available';
@@ -34,16 +34,8 @@ class HeadlineCard extends StatelessWidget {
                       image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                     ),
                   ),
-              placeholder:
-                  (context, url) => Container(
-                    color: AppColors.grey200,
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-              errorWidget:
-                  (context, url, error) => Container(
-                    color: AppColors.grey200,
-                    child: const Icon(Icons.image_not_supported, color: AppColors.grey400),
-                  ),
+              placeholder: ImagePlaceholder.loading,
+              errorWidget: ImagePlaceholder.error,
             ),
             // Gradient overlay
             Container(
