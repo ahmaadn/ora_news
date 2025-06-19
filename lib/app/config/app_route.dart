@@ -5,12 +5,11 @@ import 'package:ora_news/views/features/auth/pages/forget_password_page.dart';
 import 'package:ora_news/views/features/auth/pages/login_page.dart';
 import 'package:ora_news/views/features/auth/pages/register_page.dart';
 import 'package:ora_news/views/features/discover/pages/discover_page.dart';
-import 'package:ora_news/views/features/discover/pages/search_results_screen.dart';
+import 'package:ora_news/views/features/discover/pages/search_results_page.dart';
 import 'package:ora_news/views/features/home/pages/home_page.dart';
 import 'package:ora_news/views/features/introduction/pages/introduction_page.dart';
 import 'package:ora_news/views/features/introduction/pages/splash_page.dart';
 import 'package:ora_news/views/features/main/pages/main_page.dart';
-import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -90,7 +89,11 @@ class AppRouter {
           branches: [
             StatefulShellBranch(
               routes: [
-                GoRoute(path: '/home', builder: (context, state) => const HomePage()),
+                GoRoute(
+                  path: '/home',
+                  name: RouteNames.home,
+                  builder: (context, state) => const HomePage(),
+                ),
               ],
             ),
 
@@ -98,13 +101,14 @@ class AppRouter {
               routes: [
                 GoRoute(
                   path: '/search',
+                  name: RouteNames.discover,
                   builder: (context, state) => const DiscoverPage(),
                   routes: [
                     GoRoute(
                       path: 'results',
                       builder: (context, state) {
                         final query = state.uri.queryParameters['q'] ?? '';
-                        return SearchResultsScreen(query: query);
+                        return SearchResultsPage(query: query);
                       },
                     ),
                   ],

@@ -4,20 +4,20 @@ import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/views/widgets/custom_form_field.dart';
+import 'package:ora_news/views/widgets/inline_card.dart';
 
-class SearchResultsScreen extends StatefulWidget {
+class SearchResultsPage extends StatefulWidget {
   final String query;
 
-  const SearchResultsScreen({super.key, required this.query});
+  const SearchResultsPage({super.key, required this.query});
 
   @override
-  State<SearchResultsScreen> createState() => _SearchResultsScreenState();
+  State<SearchResultsPage> createState() => _SearchResultsPageState();
 }
 
-class _SearchResultsScreenState extends State<SearchResultsScreen> {
+class _SearchResultsPageState extends State<SearchResultsPage> {
   late final TextEditingController _searchController;
 
-  // Mock data, dalam aplikasi nyata ini akan diambil dari API
   final List<Map<String, String>> _searchResults = [
     {
       'image': 'https://placehold.co/120x120/E9446A/FFFFFF/png?text=News',
@@ -126,67 +126,12 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final result = _searchResults[index];
-                  return _buildSearchResultItem(result);
+                  return InlineCard(highlight: result);
                 },
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildSearchResultItem(Map<String, String> result) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppSpacing.roundedMedium),
-            child: Image.network(
-              result['image']!,
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
-          ),
-          AppSpacing.hsMedium,
-          Expanded(
-            child: SizedBox(
-              height: 100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    result['title']!,
-                    style: AppTypography.subtitle1,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        result['date']!,
-                        style: AppTypography.caption.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.more_horiz, color: AppColors.grey500),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
