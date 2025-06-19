@@ -13,9 +13,9 @@ class Token {
   );
 
   factory Token.fromJson(Map<String, dynamic> json) =>
-      Token(accessToken: json["accessToken"], tokenType: json["tokenType"]);
+      Token(accessToken: json["access_token"], tokenType: json["token_type"]);
 
-  Map<String, dynamic> toJson() => {"accessToken": accessToken, "tokenType": tokenType};
+  Map<String, dynamic> toJson() => {"access_token": accessToken, "token_type": tokenType};
 }
 
 // LOGIN MODEL
