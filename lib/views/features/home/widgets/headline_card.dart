@@ -21,8 +21,7 @@ class HeadlineCard extends StatelessWidget {
         headline.imageUrl ?? 'https://placehold.co/600x400/grey/white?text=No+Image';
     final title = headline.title;
     final date =
-        '${headline.publishedAt.day.toString().padLeft(2, '0')}/${headline.publishedAt.month.toString().padLeft(2, '0')}' ??
-        '';
+        '${headline.publishedAt.day.toString().padLeft(2, '0')}/${headline.publishedAt.month.toString().padLeft(2, '0')}';
     final source = "By ${headline.user.name}";
 
     return GestureDetector(
