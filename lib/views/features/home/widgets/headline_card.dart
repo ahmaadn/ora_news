@@ -21,6 +21,7 @@ class HeadlineCard extends StatelessWidget {
     final imageUrl =
         headline.imageUrl ?? 'https://placehold.co/600x400/grey/white?text=No+Image';
     final title = headline.title;
+
     final date = AppDateFormatter.formatTimeAgo(headline.publishedAt);
     final source = "By ${headline.user.name}";
 
