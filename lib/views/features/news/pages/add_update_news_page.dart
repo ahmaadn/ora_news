@@ -88,7 +88,29 @@ class _AddUpdateNewsPageState extends State<AddUpdateNewsPage> {
       final newsProvider = Provider.of<UserNewsProvider>(context, listen: false);
 
       if (widget.isUpdateMode) {
+        final bool success = await newsProvider.updateNews(
+          widget.newsData!.id,
+          title: _titleController.text,
+          content: _bodyController.text,
+          categoryId: _selectedCategory!,
+          imageUrl: _imageUrlController.text,
+        );
         log('Updating news...');
+        if (success) {
+          if (mounted) {
+            AppNotif.success(context, message: "Berita telah berhasil di buat");
+            await newsProvider.fetchUserNews();
+            context.goNamed(RouteNames.myNews);
+          }
+        } else {
+          if (mounted) {
+            AppNotif.error(
+              context,
+              message: newsProvider.errorMessage ?? "Terjadi kesalahan ",
+            );
+            context.goNamed(RouteNames.myNews);
+          }
+        }
       } else {
         log('Create News ...');
         final bool success = await newsProvider.createNews(

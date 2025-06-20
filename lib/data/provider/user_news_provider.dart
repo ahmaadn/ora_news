@@ -112,4 +112,35 @@ class UserNewsProvider with ChangeNotifier {
     log("Berhasil Upload News : ${results.data.id}");
     return true;
   }
+
+  Future<bool> updateNews(
+    String newsId, {
+    String? title,
+    String? content,
+    String? categoryId,
+    String? imageUrl,
+  }) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final results = await UserNewsService.updateNews(
+      newsId,
+      title: title,
+      content: content,
+      categoryId: categoryId,
+      imageUrl: imageUrl,
+    );
+    _isLoading = false;
+
+    if (results.success) {
+      notifyListeners();
+      log("Berhasil mengupdate news user : $newsId");
+      return true;
+    } else {
+      _errorMessage = "Error update news";
+      notifyListeners();
+      return false;
+    }
+  }
 }

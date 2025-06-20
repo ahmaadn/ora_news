@@ -94,10 +94,49 @@ class UserNewsService {
       log("responde done : ${response.statusCode}");
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-
-        log("Done Delete User News :");
+        log("Done Create News :");
         return MessageApiModel.success(
           message: "Data berhasil dicreate",
+          data: MyNewsArticle.fromJson(data),
+        );
+      } else {
+        return MessageApiModel.error(message: "Failed to create news");
+      }
+    } catch (e) {
+      log("Terjadi kesalahan $e");
+      return MessageApiModel.error(message: "Terjadi kesalahan $e");
+    }
+  }
+
+  static Future<MessageApiModel> updateNews(
+    String newsId, {
+    String? title,
+    String? content,
+    String? categoryId,
+    String? imageUrl,
+  }) async {
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.myListNewsEndpoint}/$newsId',
+    );
+
+    try {
+      final response = await http.patch(
+        url,
+        headers: await ApiConstants.authHeaders,
+        body: jsonEncode({
+          if (title != null) 'title': title,
+          if (content != null) 'content': content,
+          if (categoryId != null) 'category_id': categoryId,
+          if (imageUrl != null) "image_url": imageUrl,
+        }),
+      );
+      log("responde done : ${response.statusCode}");
+      if (response.statusCode == 202) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        log("Done Update News :");
+        return MessageApiModel.success(
+          message: "Data berhasil DiUpdate",
           data: MyNewsArticle.fromJson(data),
         );
       } else {

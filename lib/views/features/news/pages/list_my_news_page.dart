@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
+import 'package:ora_news/app/config/app_route.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/app/utils/app_notif.dart';
+import 'package:ora_news/data/models/user_models.dart';
 import 'package:ora_news/data/provider/user_news_provider.dart';
 import 'package:ora_news/views/features/news/widgets/user_inline_card.dart';
 import 'package:ora_news/views/widgets/app_button.dart';
@@ -138,7 +140,15 @@ class _ListMyNewsPageState extends State<ListMyNewsPage> {
                                 children: [
                                   Expanded(
                                     child: PrimaryButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        context.goNamed(
+                                          RouteNames.updateNews,
+                                          pathParameters: {'id': result.id},
+                                          extra: AppRouteInformation<MyNewsArticle>(
+                                            data: result,
+                                          ),
+                                        );
+                                      },
                                       text: "Update",
                                       backgroundColor: AppColors.warning,
                                       foregroundColor: AppColors.textPrimary,
