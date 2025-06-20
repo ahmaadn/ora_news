@@ -10,7 +10,7 @@ import 'package:ora_news/views/features/home/pages/home_page.dart';
 import 'package:ora_news/views/features/introduction/pages/introduction_page.dart';
 import 'package:ora_news/views/features/introduction/pages/splash_page.dart';
 import 'package:ora_news/views/features/main/pages/main_page.dart';
-import 'package:ora_news/views/features/news/pages/news_detail_page.dart';
+import 'package:ora_news/views/features/news_detail/pages/news_detail_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
