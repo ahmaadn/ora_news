@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/app/utils/image_placeholder.dart' show ImagePlaceholder;
 import 'package:ora_news/data/models/news_models.dart';
 import 'package:ora_news/data/provider/news_public_provider.dart';
@@ -30,6 +31,10 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
     );
   }
 
+  void backToHome() {
+    context.goNamed(RouteNames.home);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,15 +42,9 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.close), onPressed: () => context.pop()),
+        leading: IconButton(icon: const Icon(Icons.close), onPressed: backToHome),
         title: Text("Article Details", style: AppTypography.title3),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.share_outlined, color: AppColors.black),
-          ),
-        ],
       ),
       body: Consumer<NewsPublicProvider>(
         builder: (context, provider, child) {

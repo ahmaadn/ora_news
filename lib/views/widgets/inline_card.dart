@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/app/utils/image_placeholder.dart';
 import 'package:ora_news/data/models/news_models.dart';
 
@@ -19,7 +20,9 @@ class InlineCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         log('Masuk Ke halaman detail news');
-        context.push('/news-detail/${highlight.id}');
+        log("${GoRouter.of(context).state.name}");
+
+        context.goNamed(RouteNames.newsDetail, pathParameters: {'id': highlight.id});
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
