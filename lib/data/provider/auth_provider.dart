@@ -7,18 +7,22 @@ class AuthProvider with ChangeNotifier {
   Token? _authToken;
   bool _isLoading = false;
   String? _errorMessage;
+  bool _isLoggedIn = false;
 
   Token? get authResponse => _authToken;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _authToken != null;
+  bool get isLoggedIn => _isLoggedIn;
 
   AuthProvider() {
-    _loadAuthResponse(); // Muat token saat inisialisasi provider
+    _checkLoginStatus();
   }
 
-  Future<void> _loadAuthResponse() async {
+  Future<void> _checkLoginStatus() async {
     _authToken = await TokenManager.getTokens();
+    _isLoggedIn = _authToken != null;
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -32,6 +36,7 @@ class AuthProvider with ChangeNotifier {
 
     if (result.success) {
       _authToken = result.data;
+      _isLoggedIn = _authToken != null;
       _errorMessage = null;
       notifyListeners();
       return true;
@@ -68,6 +73,7 @@ class AuthProvider with ChangeNotifier {
     await TokenManager.clearTokens();
     _authToken = null;
     _isLoading = false;
+    _isLoggedIn = false;
     notifyListeners();
   }
 

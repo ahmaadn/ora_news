@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/constants/route_names.dart';
+import 'package:ora_news/data/provider/auth_provider.dart';
 import 'package:ora_news/views/features/auth/pages/forget_password_page.dart';
 import 'package:ora_news/views/features/auth/pages/login_page.dart';
 import 'package:ora_news/views/features/auth/pages/register_page.dart';
@@ -14,6 +15,7 @@ import 'package:ora_news/views/features/news/pages/create_news_page.dart';
 import 'package:ora_news/views/features/news/pages/list_my_news_page.dart';
 import 'package:ora_news/views/features/news/pages/update_news_page.dart';
 import 'package:ora_news/views/features/news_detail/pages/news_detail_page.dart';
+import 'package:provider/provider.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -59,6 +61,47 @@ class AppRouter {
       initialLocation: '/',
       navigatorKey: _rootNavigatorKey,
       debugLogDiagnostics: true,
+      redirect: (context, state) {
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+        if (authProvider.isLoading) {
+          return state.matchedLocation == '/' ? null : '/';
+        }
+
+        final isLoggedIn = authProvider.isLoggedIn;
+
+        // Daftar rute-rute publik yang tidak memerlukan login.
+        final publicRoutes = [
+          RouteNames.splash,
+          RouteNames.introduction,
+          RouteNames.login,
+          RouteNames.register,
+          RouteNames.forgetPassword,
+        ];
+
+        final isPublicRoute = publicRoutes.contains(state.name);
+
+        final authRoutes = [
+          RouteNames.login,
+          RouteNames.register,
+          RouteNames.forgetPassword,
+        ];
+        final isAuthRoute = authRoutes.contains(state.name);
+
+        // Logika Pengalihan:
+        // 1. Jika pengguna belum login dan mencoba mengakses rute yang dilindungi.
+        if (!isLoggedIn && !isPublicRoute) {
+          return '/auth/signin'; // Alihkan ke halaman login.
+        }
+
+        // 2. Jika pengguna sudah login dan mencoba mengakses halaman otentikasi.
+        if (isLoggedIn && isAuthRoute) {
+          return '/home'; // Alihkan ke halaman utama.
+        }
+
+        // Jika tidak ada kondisi di atas yang terpenuhi, jangan alihkan.
+        return null;
+      },
       routes: [
         GoRoute(
           path: '/',
