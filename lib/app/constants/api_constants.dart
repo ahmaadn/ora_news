@@ -8,6 +8,7 @@ class ApiConstants {
   static const String newsPublicEndpoint = '/news';
   static const String categoryEndpoint = '/category';
   static const String myListNewsEndpoint = '/me/news';
+  static const String userEndpoint = '/me';
 
   static const Map<String, dynamic> defaultParamNews = {
     'page': 1,

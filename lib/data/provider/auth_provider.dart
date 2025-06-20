@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ora_news/app/utils/token_manager.dart';
 import 'package:ora_news/data/api/auth_service.dart';
 import 'package:ora_news/data/models/auth_models.dart';
+import 'package:ora_news/data/models/user_models.dart';
 
 class AuthProvider with ChangeNotifier {
   Token? _authToken;
@@ -9,11 +10,14 @@ class AuthProvider with ChangeNotifier {
   String? _errorMessage;
   bool _isLoggedIn = false;
 
+  User? _currentUser;
+
   Token? get authResponse => _authToken;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _authToken != null;
   bool get isLoggedIn => _isLoggedIn;
+  User? get currentUser => _currentUser;
 
   AuthProvider() {
     _checkLoginStatus();
@@ -86,6 +90,55 @@ class AuthProvider with ChangeNotifier {
     final result = await AuthService.requestPasswordChange(data);
 
     _isLoading = false;
+    if (result.success) {
+      _errorMessage = null;
+      notifyListeners();
+      return true;
+    } else {
+      _errorMessage = result.message;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> detailUser() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final result = await AuthService.getCurrentUSer();
+    _isLoading = false;
+    _currentUser = result.data;
+    if (result.success) {
+      _errorMessage = null;
+      notifyListeners();
+      return true;
+    } else {
+      _errorMessage = result.message;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> updateUser({
+    String? email,
+    String? username,
+    String? name,
+    String? password,
+  }) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final result = await AuthService.updateUser(
+      email: email,
+      username: username,
+      name: name,
+      password: password,
+    );
+
+    _isLoading = false;
+    _currentUser = result.data;
     if (result.success) {
       _errorMessage = null;
       notifyListeners();

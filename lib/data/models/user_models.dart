@@ -176,7 +176,7 @@ class MyNewsArticle {
     content: json["content"],
     imageUrl: json["image_url"],
     category: CategoryNews.fromJson(json["category"]),
-    publishedAt: DateTime.parse(json["published_at"]),
+    publishedAt: DateTime.parse(json["published_at"] + 'Z'),
   );
 
   Map<String, dynamic> toJson() => {

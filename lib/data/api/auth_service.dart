@@ -90,4 +90,70 @@ class AuthService {
       return MessageApiModel.error(message: 'Terjadi kesalahan: $e');
     }
   }
+
+  static Future<MessageApiModel> getCurrentUSer() async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.userEndpoint}');
+
+    log("URI");
+    try {
+      log("TEST RESPONESE");
+      final response = await http.get(url, headers: await ApiConstants.authHeaders);
+      log("TEST RESPONESE POST");
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        log("BERHASIL GET USER");
+        final User user = User.fromJson(data);
+
+        return MessageApiModel<User>.success(message: 'Get user berhasil', data: user);
+      } else {
+        final Map<String, dynamic> errorData = json.decode(response.body);
+        return MessageApiModel<Null>.error(
+          message: errorData['detail']['messages'][0] ?? 'Registrasi gagal',
+        );
+      }
+    } catch (e) {
+      return MessageApiModel<Null>.error(message: 'Terjadi kesalahan: $e');
+    }
+  }
+
+  static Future<MessageApiModel> updateUser({
+    String? email,
+    String? username,
+    String? name,
+    String? password,
+  }) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.userEndpoint}');
+    final String body = json.encode({
+      if (email != null && password != '') 'email': email,
+      if (username != null && password != '') 'username': username,
+      if (name != null && password != '') 'name': name,
+      if (password != null && password != '') 'password': password,
+    });
+
+    log("${password != null} || ${password != ''}");
+
+    log(body);
+    try {
+      log("TEST RESPONESE UPADTE");
+      final response = await http.put(
+        url,
+        headers: await ApiConstants.authHeaders,
+        body: body,
+      );
+      log("TEST RESPONESE POST");
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        log("BERHASIL GET USER");
+        final User user = User.fromJson(data);
+
+        return MessageApiModel<User>.success(message: 'Get user berhasil', data: user);
+      } else {
+        log(response.body);
+        return MessageApiModel<Null>.error(message: 'Registrasi gagal');
+      }
+    } catch (e) {
+      log('Terjadi kesalahan: $e');
+      return MessageApiModel<Null>.error(message: 'Terjadi kesalahan: $e');
+    }
+  }
 }

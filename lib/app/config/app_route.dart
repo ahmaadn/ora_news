@@ -15,6 +15,7 @@ import 'package:ora_news/views/features/main/pages/main_page.dart';
 import 'package:ora_news/views/features/news/pages/add_update_news_page.dart';
 import 'package:ora_news/views/features/news/pages/list_my_news_page.dart';
 import 'package:ora_news/views/features/news_detail/pages/news_detail_page.dart';
+import 'package:ora_news/views/features/profile/pages/profile_page.dart';
 import 'package:provider/provider.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -189,7 +190,7 @@ class AppRouter {
                     }
                     return null;
                   },
-                  builder: (context, state) => const DiscoverPage(),
+                  builder: (context, state) => const ProfilePage(),
                 ),
               ],
             ),

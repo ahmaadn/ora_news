@@ -104,7 +104,7 @@ class NewsArticle {
     title: json["title"],
     content: json["content"],
     imageUrl: json["image_url"],
-    publishedAt: DateTime.parse(json["published_at"]),
+    publishedAt: DateTime.parse(json["published_at"] + 'Z'),
     category: CategoryNews.fromJson(json["category"]),
     user: UserPublic.fromJson(json["user"]),
   );
