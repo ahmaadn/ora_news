@@ -1,66 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:ora_news/app/config/app_color.dart';
-import 'package:ora_news/app/config/app_spacing.dart';
-import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/data/models/news_models.dart';
+import 'package:ora_news/views/widgets/news_card.dart';
 
-class TrendingList extends StatelessWidget {
-  final List<Map<String, String>> trendingNews;
+class TrendingList extends StatefulWidget {
+  final List<NewsArticle> trendingNews;
 
   const TrendingList({super.key, required this.trendingNews});
 
   @override
+  State<TrendingList> createState() => _TrendingListState();
+}
+
+class _TrendingListState extends State<TrendingList> {
+  @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: trendingNews.length,
+      itemCount: widget.trendingNews.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        final trending = trendingNews[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.m,
-            vertical: AppSpacing.s,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(AppSpacing.roundedMedium),
-                child: Image.network(
-                  trending['image']!,
-                  height: 180,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              AppSpacing.vsMedium,
-              Text(
-                trending['title']!,
-                style: AppTypography.headline3.copyWith(height: 1.4),
-              ),
-              AppSpacing.vsSmall,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    trending['source']!,
-                    style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Read full coverage ->',
-                      style: AppTypography.caption.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: AppTypography.semiBold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
+        final trending = widget.trendingNews[index];
+        return NewsCard(trending: trending);
       },
     );
   }

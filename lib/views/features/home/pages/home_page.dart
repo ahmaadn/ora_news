@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/data/models/news_models.dart';
+import 'package:ora_news/data/provider/news_public_provider.dart';
 import 'package:ora_news/views/features/home/widgets/headline_carousel.dart';
 import 'package:ora_news/views/features/home/widgets/highlights_list.dart';
 import 'package:ora_news/views/features/home/widgets/section_header.dart';
 import 'package:ora_news/views/features/home/widgets/trending_list.dart';
 import 'package:ora_news/views/widgets/custom_button.dart';
 import 'package:ora_news/views/widgets/main_app_bar.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,109 +20,96 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
-
-  // Mock data untuk UI, ini bisa berasal dari state management atau API call
-  final List<Map<String, String>> _headlinesData = [
-    {
-      'image': 'https://picsum.photos/600/400?random=1',
-      'title': 'Tech giant announces major investment in renewable energy',
-      'source': 'BBC News',
-      'date': "11",
-      'time_ago': '2 hours ago',
-    },
-    {
-      'image': 'https://picsum.photos/600/400?random=2',
-      'title': 'New Breakthrough in AI could change the future of medicine',
-      'source': 'Ora News',
-    },
-    {
-      'image': 'https://picsum.photos/600/400?random=3',
-      'title': 'Exploring the depths of the ocean: New species discovered',
-      'source': 'Nat Geo',
-    },
-  ];
-
-  final List<Map<String, String>> _highlightsData = List.generate(
-    4,
-    (index) => {
-      'image': 'https://picsum.photos/600/400?random=${index + 1}',
-      'title': 'Stock market surges to all-time low after announcement',
-      'source': 'Reuters',
-      'date': 'September 20',
-    },
-  );
-
-  final List<Map<String, String>> _trendingNewsData = List.generate(
-    3,
-    (index) => {
-      'image': 'https://picsum.photos/600/400?random=${index + 1}',
-      'title': 'Global trade agreements shift as new tariffs take effect',
-      'source': 'Associated Press',
-    },
-  );
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+    Future.microtask(() => context.read<NewsPublicProvider>().fetchHomeData());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return [
-              SliverAppBar(
-                backgroundColor: AppColors.background,
-                automaticallyImplyLeading: false,
-                floating: true,
-                snap: true,
-                flexibleSpace: MainAppBar(),
-                bottom: _buildCategoryTabs(),
+    return Consumer<NewsPublicProvider>(
+      builder: (context, provider, child) {
+        // Tampilkan loading indicator saat data awal sedang diambil.
+        if (provider.isLoading && provider.categories.isEmpty) {
+          return Scaffold(
+            backgroundColor: AppColors.background,
+            appBar: AppBar(flexibleSpace: MainAppBar()),
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        // Tampilkan error jika terjadi dan tidak ada data.
+        if (provider.errorMessage != null && provider.categories.isEmpty) {
+          return Scaffold(
+            backgroundColor: AppColors.background,
+            appBar: AppBar(flexibleSpace: MainAppBar()),
+            body: Center(child: Text('Error: ${provider.errorMessage}')),
+          );
+        }
+
+        // Siapkan daftar kategori untuk TabBar, tambahkan "Semua" di awal.
+        final displayCategories = [
+          CategoryNews(id: 'all', name: 'All'),
+          ...provider.categories,
+        ];
+        return DefaultTabController(
+          length: displayCategories.length,
+          child: Scaffold(
+            backgroundColor: AppColors.background,
+            body: SafeArea(
+              child: NestedScrollView(
+                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                  return [
+                    SliverAppBar(
+                      backgroundColor: AppColors.background,
+                      automaticallyImplyLeading: false,
+                      floating: true,
+                      snap: true,
+                      flexibleSpace: MainAppBar(),
+                      bottom: _buildCategoryTabs(
+                        provider: provider,
+                        displayCategories: displayCategories,
+                      ),
+                    ),
+                  ];
+                },
+                body: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppSpacing.vsMedium,
+                      HeadlineCarousel(headlines: provider.headlines),
+                      AppSpacing.vsLarge,
+                      SectionHeader(title: 'Highlights'),
+                      HighlightsList(highlights: provider.highlights),
+                      AppSpacing.vsLarge,
+                      SectionHeader(title: '🔥 Trending'),
+                      TrendingList(trendingNews: provider.highlights),
+                      AppSpacing.vsMedium,
+                      _buildLoadMoreButton(),
+                      AppSpacing.vsLarge,
+                    ],
+                  ),
+                ),
               ),
-            ];
-          },
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppSpacing.vsMedium,
-                HeadlineCarousel(headlines: _headlinesData),
-                AppSpacing.vsLarge,
-                SectionHeader(title: 'Highlights', onSeeAll: () {}),
-                HighlightsList(highlights: _highlightsData),
-                AppSpacing.vsLarge,
-                SectionHeader(title: '🔥 Trending', onSeeAll: () {}),
-                TrendingList(trendingNews: _trendingNewsData),
-                AppSpacing.vsMedium,
-                _buildLoadMoreButton(),
-                AppSpacing.vsLarge,
-              ],
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  PreferredSizeWidget _buildCategoryTabs() {
+  PreferredSizeWidget _buildCategoryTabs({
+    required NewsPublicProvider provider,
+    required List<CategoryNews> displayCategories,
+  }) {
     return PreferredSize(
       preferredSize: Size.fromHeight(kTextTabBarHeight + AppSpacing.m),
       child: Column(
         children: [
           Divider(height: 1, color: AppColors.grey300),
           TabBar(
-            controller: _tabController,
             isScrollable: true,
             labelColor: AppColors.primary,
             unselectedLabelColor: AppColors.textPrimary,
@@ -133,14 +123,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             ),
             dividerColor: Colors.transparent,
             tabAlignment: TabAlignment.start,
-            tabs: const [
-              Tab(text: 'Trending'),
-              Tab(text: 'Challenges'),
-              Tab(text: 'For You'),
-              Tab(text: 'Olahraga'),
-              Tab(text: 'Politik'),
-              Tab(text: 'Pendidikan'),
-            ],
+            onTap: (index) {
+              final categoryId = displayCategories[index].id;
+
+              if (categoryId == 'all') {
+                provider.fetchHomeData();
+                return;
+              }
+              provider.fetchNewsByCategory(categoryId == 'all' ? null : categoryId);
+            },
+            tabs: displayCategories.map((category) => Tab(text: category.name)).toList(),
           ),
         ],
       ),

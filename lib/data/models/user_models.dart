@@ -67,3 +67,18 @@ class User {
     "is_verified": isVerified,
   };
 }
+
+class UserPublic {
+  final String username;
+  final String name;
+
+  UserPublic({required this.username, required this.name});
+
+  UserPublic copyWith({String? username, String? name}) =>
+      UserPublic(username: username ?? this.username, name: name ?? this.name);
+
+  factory UserPublic.fromJson(Map<String, dynamic> json) =>
+      UserPublic(username: json["username"], name: json["name"]);
+
+  Map<String, dynamic> toJson() => {"username": username, "name": name};
+}

@@ -2,12 +2,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
+import 'package:ora_news/data/models/news_models.dart';
 
 import 'package:ora_news/views/features/home/widgets/headline_card.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HeadlineCarousel extends StatefulWidget {
-  final List<Map<String, String>> headlines;
+  final List<NewsArticle> headlines;
 
   const HeadlineCarousel({super.key, required this.headlines});
 
@@ -21,8 +22,9 @@ class _HeadlineCarouselState extends State<HeadlineCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    // Tidak menampilkan apa-apa jika tidak ada data
     if (widget.headlines.isEmpty) {
-      return const SizedBox.shrink(); // Tidak menampilkan apa-apa jika tidak ada data
+      return const SizedBox.shrink();
     }
 
     return Column(
@@ -32,16 +34,17 @@ class _HeadlineCarouselState extends State<HeadlineCarousel> {
           itemCount: widget.headlines.length,
           itemBuilder: (context, index, realIndex) {
             final headline = widget.headlines[index];
-            // Menggunakan widget HeadlineCard yang baru
             return HeadlineCard(headline: headline);
           },
           options: CarouselOptions(
             height: 350,
             // aspectRatio: 19 / 20,
-            autoPlay: true,
-            autoPlayInterval: const Duration(seconds: 5),
-            viewportFraction: 0.8,
-            enlargeCenterPage: true,
+            autoPlay: false,
+            // autoPlayInterval: const Duration(seconds: 5),
+            // enableInfiniteScroll: false,
+            viewportFraction: 0.7,
+            enlargeCenterPage: false,
+            padEnds: false,
             enlargeStrategy: CenterPageEnlargeStrategy.height,
             onPageChanged: (index, reason) {
               setState(() {

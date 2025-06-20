@@ -5,9 +5,8 @@ import 'package:ora_news/app/config/app_typography.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
-  final VoidCallback? onSeeAll;
 
-  const SectionHeader({super.key, required this.title, this.onSeeAll});
+  const SectionHeader({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -17,18 +16,7 @@ class SectionHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            title,
-            style: AppTypography.headline2.copyWith(color: AppColors.textPrimary),
-          ),
-          if (onSeeAll != null)
-            TextButton(
-              onPressed: onSeeAll,
-              child: Text(
-                'See all',
-                style: AppTypography.button.copyWith(color: AppColors.primary),
-              ),
-            ),
+          Text(title, style: AppTypography.title3.copyWith(color: AppColors.textPrimary)),
         ],
       ),
     );

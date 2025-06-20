@@ -1,62 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
-import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/data/models/news_models.dart';
+import 'package:ora_news/views/widgets/inline_card.dart';
 
-class HighlightsList extends StatelessWidget {
-  final List<Map<String, String>> highlights;
+class HighlightsList extends StatefulWidget {
+  final List<NewsArticle> highlights;
 
   const HighlightsList({super.key, required this.highlights});
 
   @override
+  State<HighlightsList> createState() => _HighlightsListState();
+}
+
+class _HighlightsListState extends State<HighlightsList> {
+  @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: highlights.length,
+      itemCount: widget.highlights.length,
       shrinkWrap: true,
-      physics:
-          const NeverScrollableScrollPhysics(), // Karena sudah di dalam SingleChildScrollView
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       itemBuilder: (context, index) {
-        final highlight = highlights[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(AppSpacing.roundedMedium),
-                child: Image.network(
-                  highlight['image']!,
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              AppSpacing.hsMedium,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      highlight['title']!,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.subtitle1.copyWith(height: 1.4),
-                    ),
-                    AppSpacing.vsSmall,
-                    Text(
-                      '${highlight['source']} • ${highlight['date']}',
-                      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.more_horiz, color: AppColors.grey500),
-              ),
-            ],
-          ),
-        );
+        final highlight = widget.highlights[index];
+        return InlineCard(highlight: highlight);
       },
     );
   }

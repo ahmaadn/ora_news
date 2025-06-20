@@ -37,6 +37,7 @@ dependencies:
   go_router: ^15.1.2
   google_fonts: ^6.2.1
   http: ^1.4.0
+  intl: ^0.20.2
   provider: ^6.1.5
   shared_preferences: ^2.5.3
   smooth_page_indicator: ^1.2.1

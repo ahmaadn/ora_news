@@ -3,12 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ora_news/app/config/app_route.dart';
 import 'package:ora_news/data/provider/auth_provider.dart';
+import 'package:ora_news/data/provider/news_public_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => NewsPublicProvider()),
+      ],
       child: const OraNewsApp(),
     ),
   );
@@ -33,7 +37,7 @@ class OraNewsApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          routerConfig: AppRouter().goRouter,
+          routerConfig: AppRouter().router,
         );
       },
     );

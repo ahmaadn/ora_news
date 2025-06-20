@@ -9,4 +9,5 @@ class RouteNames {
   static const String discover = 'Discover';
   static const String favorite = 'Favorite';
   static const String profile = 'profile';
+  static const String newsDetail = 'newsDetail';
 }

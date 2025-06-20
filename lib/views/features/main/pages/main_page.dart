@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_typography.dart';
-import 'package:ora_news/views/features/home/pages/home_page.dart';
 
 class MainPage extends StatefulWidget {
-  final int? index;
-  const MainPage({super.key, this.index = 0});
+  final StatefulNavigationShell navigationShell;
+
+  const MainPage({super.key, required this.navigationShell});
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  late int _currentIndex;
-
-  List<Widget> body = const [HomePage(), HomePage(), HomePage(), HomePage()];
-
-  @override
-  void initState() {
-    _currentIndex = widget.index ?? 0;
-    super.initState();
+  // Fungsi ini dipanggil saat item di BottomNavigationBar ditekan
+  void _onItemTapped(int index) {
+    widget.navigationShell.goBranch(
+      index,
+      // Jika kita kembali ke tab yang sudah aktif, jangan reset state-nya
+      initialLocation: index == widget.navigationShell.currentIndex,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body[_currentIndex],
+      body: widget.navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: AppColors.surface,
@@ -35,8 +35,8 @@ class _MainPageState extends State<MainPage> {
           fontWeight: AppTypography.semiBold,
         ),
         unselectedLabelStyle: AppTypography.caption,
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        currentIndex: widget.navigationShell.currentIndex,
+        onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Discover'),
