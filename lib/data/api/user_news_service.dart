@@ -49,4 +49,23 @@ class UserNewsService {
       return MessageApiModel.error(message: 'Failed to load categories: $e');
     }
   }
+
+  static Future<MessageApiModel> deleteNews(String newsId) async {
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.myListNewsEndpoint}/$newsId',
+    );
+
+    try {
+      final response = await http.delete(url, headers: await ApiConstants.authHeaders);
+      log("responde done : ${response.statusCode}");
+      if (response.statusCode == 202) {
+        log("Done Delete User News : $newsId");
+        return MessageApiModel.success(message: "Data berhasil dihapus", data: null);
+      } else {
+        return MessageApiModel.error(message: "Failed to delete news");
+      }
+    } catch (e) {
+      return MessageApiModel.error(message: "Terjadi kesalahan $e");
+    }
+  }
 }

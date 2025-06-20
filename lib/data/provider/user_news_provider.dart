@@ -42,4 +42,23 @@ class UserNewsProvider with ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> deleteNews(String newsId) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final results = await UserNewsService.deleteNews(newsId);
+    _isLoading = false;
+
+    if (results.success) {
+      notifyListeners();
+      log("Berhasil menghapus news user : $newsId");
+      return true;
+    } else {
+      _errorMessage = "Error deleting news";
+      notifyListeners();
+      return false;
+    }
+  }
 }
