@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/constants/route_names.dart';
+import 'package:ora_news/data/models/user_models.dart';
 import 'package:ora_news/data/provider/auth_provider.dart';
 import 'package:ora_news/views/features/auth/pages/forget_password_page.dart';
 import 'package:ora_news/views/features/auth/pages/login_page.dart';
@@ -11,9 +12,8 @@ import 'package:ora_news/views/features/home/pages/home_page.dart';
 import 'package:ora_news/views/features/introduction/pages/introduction_page.dart';
 import 'package:ora_news/views/features/introduction/pages/splash_page.dart';
 import 'package:ora_news/views/features/main/pages/main_page.dart';
-import 'package:ora_news/views/features/news/pages/create_news_page.dart';
+import 'package:ora_news/views/features/news/pages/add_update_news_page.dart';
 import 'package:ora_news/views/features/news/pages/list_my_news_page.dart';
-import 'package:ora_news/views/features/news/pages/update_news_page.dart';
 import 'package:ora_news/views/features/news_detail/pages/news_detail_page.dart';
 import 'package:provider/provider.dart';
 
@@ -61,47 +61,6 @@ class AppRouter {
       initialLocation: '/',
       navigatorKey: _rootNavigatorKey,
       debugLogDiagnostics: true,
-      redirect: (context, state) {
-        final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-        if (authProvider.isLoading) {
-          return state.matchedLocation == '/' ? null : '/';
-        }
-
-        final isLoggedIn = authProvider.isLoggedIn;
-
-        // Daftar rute-rute publik yang tidak memerlukan login.
-        final publicRoutes = [
-          RouteNames.splash,
-          RouteNames.introduction,
-          RouteNames.login,
-          RouteNames.register,
-          RouteNames.forgetPassword,
-        ];
-
-        final isPublicRoute = publicRoutes.contains(state.name);
-
-        final authRoutes = [
-          RouteNames.login,
-          RouteNames.register,
-          RouteNames.forgetPassword,
-        ];
-        final isAuthRoute = authRoutes.contains(state.name);
-
-        // Logika Pengalihan:
-        // 1. Jika pengguna belum login dan mencoba mengakses rute yang dilindungi.
-        if (!isLoggedIn && !isPublicRoute) {
-          return '/auth/signin'; // Alihkan ke halaman login.
-        }
-
-        // 2. Jika pengguna sudah login dan mencoba mengakses halaman otentikasi.
-        if (isLoggedIn && isAuthRoute) {
-          return '/home'; // Alihkan ke halaman utama.
-        }
-
-        // Jika tidak ada kondisi di atas yang terpenuhi, jangan alihkan.
-        return null;
-      },
       routes: [
         GoRoute(
           path: '/',
@@ -177,13 +136,20 @@ class AppRouter {
                 ),
               ],
             ),
-
             StatefulShellBranch(
               routes: [
                 GoRoute(
                   path: '/profile/news',
                   name: RouteNames.myNews,
                   builder: (context, state) => const ListMyNewsPage(),
+                  redirect: (context, state) {
+                    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                    final isLoggedIn = authProvider.isLoggedIn;
+                    if (!isLoggedIn) {
+                      return '/auth/signin';
+                    }
+                    return null;
+                  },
                   routes: [
                     GoRoute(
                       path: 'create',
@@ -194,19 +160,35 @@ class AppRouter {
                       path: 'update/:id',
                       name: RouteNames.updateNews,
                       builder: (context, state) {
-                        final query = state.uri.queryParameters['q'] ?? '';
-                        return UpdateNewsPage(newsId: query);
+                        final newsId = state.pathParameters['id'];
+                        final info = state.extra as AppRouteInformation<MyNewsArticle>?;
+                        final article = info?.data;
+
+                        if (newsId != null) {
+                          return AddUpdateNewsPage(newsData: article);
+                        } else {
+                          return const Scaffold(
+                            body: Center(child: Text("Article not found.")),
+                          );
+                        }
                       },
                     ),
                   ],
                 ),
               ],
             ),
-
             StatefulShellBranch(
               routes: [
                 GoRoute(
                   path: '/profile',
+                  redirect: (context, state) {
+                    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                    final isLoggedIn = authProvider.isLoggedIn;
+                    if (!isLoggedIn) {
+                      return '/auth/signin';
+                    }
+                    return null;
+                  },
                   builder: (context, state) => const DiscoverPage(),
                 ),
               ],
