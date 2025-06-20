@@ -1,3 +1,5 @@
+import 'package:ora_news/data/models/news_models.dart';
+
 class User {
   final DateTime createAt;
   final DateTime updateAt;
@@ -81,4 +83,108 @@ class UserPublic {
       UserPublic(username: json["username"], name: json["name"]);
 
   Map<String, dynamic> toJson() => {"username": username, "name": name};
+}
+
+class PaginationMyNews {
+  final int count;
+  final List<MyNewsArticle> items;
+  final int currPage;
+  final int totalPage;
+  final String? nextPage;
+  final String? previousPage;
+
+  PaginationMyNews({
+    required this.count,
+    required this.items,
+    required this.currPage,
+    required this.totalPage,
+    this.nextPage,
+    this.previousPage,
+  });
+
+  PaginationMyNews copyWith({
+    int? count,
+    List<MyNewsArticle>? items,
+    int? currPage,
+    int? totalPage,
+    String? nextPage,
+    String? previousPage,
+  }) => PaginationMyNews(
+    count: count ?? this.count,
+    items: items ?? this.items,
+    currPage: currPage ?? this.currPage,
+    totalPage: totalPage ?? this.totalPage,
+    nextPage: nextPage ?? this.nextPage,
+    previousPage: previousPage ?? this.previousPage,
+  );
+
+  factory PaginationMyNews.fromJson(Map<String, dynamic> json) => PaginationMyNews(
+    count: json["count"],
+    items: List<MyNewsArticle>.from(json["items"].map((x) => MyNewsArticle.fromJson(x))),
+    currPage: json["curr_page"],
+    totalPage: json["total_page"],
+    nextPage: json["next_page"],
+    previousPage: json["previous_page"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "count": count,
+    "items": List<dynamic>.from(items.map((x) => x.toJson())),
+    "curr_page": currPage,
+    "total_page": totalPage,
+    "next_page": nextPage,
+    "previous_page": previousPage,
+  };
+}
+
+class MyNewsArticle {
+  final String id;
+  final String title;
+  final String content;
+  final String? imageUrl;
+  final CategoryNews category;
+  final DateTime publishedAt;
+
+  MyNewsArticle({
+    required this.id,
+    required this.title,
+    required this.content,
+    this.imageUrl,
+    required this.category,
+    required this.publishedAt,
+  });
+
+  MyNewsArticle copyWith({
+    String? id,
+    String? title,
+    String? content,
+    String? imageUrl,
+    CategoryNews? category,
+    DateTime? publishedAt,
+  }) => MyNewsArticle(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    content: content ?? this.content,
+    imageUrl: imageUrl ?? this.imageUrl,
+    category: category ?? this.category,
+    publishedAt: publishedAt ?? this.publishedAt,
+  );
+
+  factory MyNewsArticle.fromJson(Map<String, dynamic> json) => MyNewsArticle(
+    id: json["id"],
+    title: json["title"],
+    content: json["content"],
+    imageUrl: json["image_url"],
+    category: CategoryNews.fromJson(json["category"]),
+    publishedAt: DateTime.parse(json["published_at"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "title": title,
+    "content": content,
+    "image_url": imageUrl,
+    "category": category.toJson(),
+    "published_at": publishedAt.toIso8601String(),
+  };
 }

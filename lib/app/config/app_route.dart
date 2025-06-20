@@ -10,6 +10,9 @@ import 'package:ora_news/views/features/home/pages/home_page.dart';
 import 'package:ora_news/views/features/introduction/pages/introduction_page.dart';
 import 'package:ora_news/views/features/introduction/pages/splash_page.dart';
 import 'package:ora_news/views/features/main/pages/main_page.dart';
+import 'package:ora_news/views/features/news/pages/create_news_page.dart';
+import 'package:ora_news/views/features/news/pages/list_my_news_page.dart';
+import 'package:ora_news/views/features/news/pages/update_news_page.dart';
 import 'package:ora_news/views/features/news_detail/pages/news_detail_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -136,7 +139,23 @@ class AppRouter {
               routes: [
                 GoRoute(
                   path: '/profile/news',
-                  builder: (context, state) => const DiscoverPage(),
+                  name: RouteNames.myNews,
+                  builder: (context, state) => const ListMyNewsPage(),
+                  routes: [
+                    GoRoute(
+                      path: 'create',
+                      name: RouteNames.addNews,
+                      builder: (context, state) => const CreateNewsPage(),
+                    ),
+                    GoRoute(
+                      path: 'update/:id',
+                      name: RouteNames.updateNews,
+                      builder: (context, state) {
+                        final query = state.uri.queryParameters['q'] ?? '';
+                        return UpdateNewsPage(newsId: query);
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
