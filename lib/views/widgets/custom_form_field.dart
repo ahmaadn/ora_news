@@ -20,7 +20,7 @@ class CustomFormField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onChanged;
   final FormFieldSetter<String>? onSaved;
-  final int maxLines;
+  final int? maxLines;
   final int? minLines;
   final int? maxLength;
   final TextInputAction? textInputAction;
@@ -120,17 +120,29 @@ class _CustomFormFieldState extends State<CustomFormField> {
     }
   }
 
-  EdgeInsetsGeometry _getEffectiveContentPadding(TextStyle textStyle) {
-    final double targetBoxHeight = _getTargetBoxHeight();
-    final double textHeight = textStyle.fontSize ?? AppTypography.bodyText1.fontSize!;
-    final double lineHeight = textStyle.height ?? 1.2;
-    final double singleLineTextActualHeight = textHeight * lineHeight;
-    double verticalPadding = (targetBoxHeight - singleLineTextActualHeight) / 2;
+  EdgeInsetsGeometry _getEffectiveContentPadding(TextStyle textStyle, bool isTextArea) {
+    final horizontalPadding = AppSpacing.m; // Common horizontal padding
 
-    if (verticalPadding < AppSpacing.xs) {
-      verticalPadding = AppSpacing.xs;
+    if (isTextArea) {
+      // For text areas, use a consistent vertical padding.
+      // This ensures text starts near the top.
+      return EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: AppSpacing.s);
+    } else {
+      // Original logic for single-line fields to vertically center the text.
+      final double targetBoxHeight = _getTargetBoxHeight();
+      final double textHeight = textStyle.fontSize ?? AppTypography.bodyText1.fontSize!;
+      final double lineHeight = textStyle.height ?? 1.2; // Default line height multiplier
+      final double singleLineTextActualHeight = textHeight * lineHeight;
+
+      // Calculate vertical padding to center the text.
+      double verticalPadding = (targetBoxHeight - singleLineTextActualHeight) / 2;
+
+      // Ensure padding is not too small.
+      if (verticalPadding < AppSpacing.xs) {
+        verticalPadding = AppSpacing.xs;
+      }
+      return EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding);
     }
-    return EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: verticalPadding);
   }
 
   @override
@@ -138,11 +150,15 @@ class _CustomFormFieldState extends State<CustomFormField> {
     final ThemeData theme = Theme.of(context);
     final InputDecorationTheme inputTheme = theme.inputDecorationTheme;
     final bool isEffectivelyEnabled = widget.enabled && !widget.readOnly;
+    // Determine if the field should behave as a text area
+    final bool isTextArea = widget.maxLines != 1;
+
     final TextStyle effectiveTextStyle = AppTypography.bodyText1.copyWith(
       color: isEffectivelyEnabled ? AppColors.textPrimary : AppColors.textDisabled,
     );
     final EdgeInsetsGeometry effectiveContentPadding = _getEffectiveContentPadding(
       effectiveTextStyle,
+      isTextArea,
     );
     final double cursorHeight =
         (effectiveTextStyle.fontSize ?? AppTypography.bodyText1.fontSize!) + AppSpacing.xs;
@@ -239,33 +255,42 @@ class _CustomFormFieldState extends State<CustomFormField> {
       children: <Widget>[
         if (widget.labelText != null && widget.labelText!.isNotEmpty)
           CustomFieldLabel(text: widget.labelText!, enabled: isEffectivelyEnabled),
-        SizedBox(
-          height: _getTargetBoxHeight(),
-          child: TextFormField(
-            controller: widget.controller,
-            initialValue: widget.initialValue,
-            decoration: effectiveDecoration,
-            obscureText: widget.obscureText,
-            keyboardType: widget.keyboardType,
-            cursorHeight: cursorHeight,
-            validator: inputValidator,
-            onChanged: widget.onChanged,
-            onSaved: widget.onSaved,
-            maxLines: widget.maxLines,
-            minLines: widget.minLines,
-            maxLength: widget.maxLength,
-            textInputAction: widget.textInputAction,
-            focusNode: _focusNode,
-            readOnly: widget.readOnly,
-            enabled: widget.enabled,
-            autovalidateMode: widget.autovalidateMode,
-            onTap: widget.onTap,
-            inputFormatters: widget.inputFormatters,
-            textCapitalization: widget.textCapitalization,
-            style: effectiveTextStyle,
-            textAlignVertical: TextAlignVertical.center,
-            onFieldSubmitted: widget.onFieldSubmitted,
-          ),
+        Builder(
+          builder: (context) {
+            Widget textFormField = TextFormField(
+              controller: widget.controller,
+              initialValue: widget.initialValue,
+              decoration: effectiveDecoration,
+              obscureText: widget.obscureText,
+              keyboardType: widget.keyboardType,
+              cursorHeight: cursorHeight,
+              validator: inputValidator,
+              onChanged: widget.onChanged,
+              onSaved: widget.onSaved,
+              maxLines: widget.maxLines,
+              minLines: widget.minLines,
+              maxLength: widget.maxLength,
+              textInputAction: widget.textInputAction,
+              focusNode: _focusNode,
+              readOnly: widget.readOnly,
+              enabled: widget.enabled,
+              autovalidateMode: widget.autovalidateMode,
+              onTap: widget.onTap,
+              inputFormatters: widget.inputFormatters,
+              textCapitalization: widget.textCapitalization,
+              style: effectiveTextStyle,
+              textAlignVertical:
+                  isTextArea ? TextAlignVertical.top : TextAlignVertical.center,
+              onFieldSubmitted: widget.onFieldSubmitted,
+            );
+
+            if (isTextArea) {
+              return textFormField; // Text area determines its own height
+            } else {
+              // For single-line fields, wrap with SizedBox for fixed height
+              return SizedBox(height: _getTargetBoxHeight(), child: textFormField);
+            }
+          },
         ),
         if (widget.collapseError && _errorText != null && isEffectivelyEnabled ||
             !widget.collapseError)

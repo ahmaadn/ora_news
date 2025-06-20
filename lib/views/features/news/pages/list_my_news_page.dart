@@ -179,6 +179,7 @@ class _ListMyNewsPageState extends State<ListMyNewsPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           log('Add new news');
+          context.goNamed(RouteNames.createNews);
         },
         backgroundColor: AppColors.success,
         shape: const CircleBorder(),

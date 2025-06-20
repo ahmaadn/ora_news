@@ -187,8 +187,8 @@ class AppRouter {
                   routes: [
                     GoRoute(
                       path: 'create',
-                      name: RouteNames.addNews,
-                      builder: (context, state) => const CreateNewsPage(),
+                      name: RouteNames.createNews,
+                      builder: (context, state) => const AddUpdateNewsPage(),
                     ),
                     GoRoute(
                       path: 'update/:id',

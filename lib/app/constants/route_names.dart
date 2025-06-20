@@ -9,6 +9,6 @@ class RouteNames {
   static const String myNews = 'myNews';
   static const String profile = 'profile';
   static const String newsDetail = 'newsDetail';
-  static const String addNews = 'addNews';
+  static const String createNews = 'createNews';
   static const String updateNews = 'updateNews';
 }
