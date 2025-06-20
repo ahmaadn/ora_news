@@ -116,7 +116,7 @@ class _ListMyNewsPageState extends State<ListMyNewsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Total Publish News : ${provider.news.length.toString()}',
+                        'Total Publish News : ${provider.countNews}',
                         style: AppTypography.headline2,
                       ),
 
@@ -162,6 +162,11 @@ class _ListMyNewsPageState extends State<ListMyNewsPage> {
                             ],
                           );
                         },
+                      ),
+                      OutlineButtonWidget(
+                        onPressed: () {},
+                        text: "Load More",
+                        width: double.infinity,
                       ),
                     ],
                   );

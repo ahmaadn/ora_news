@@ -10,10 +10,12 @@ class UserNewsProvider with ChangeNotifier {
   String? _errorMessage;
 
   List<MyNewsArticle> _news = [];
+  int _countNews = 0;
 
   List<MyNewsArticle> get news => _news;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  int get countNews => _countNews;
 
   String get userId => _userId;
 
@@ -33,6 +35,7 @@ class UserNewsProvider with ChangeNotifier {
     if (results.success) {
       final PaginationMyNews paginate = results.data;
       _news = paginate.items;
+      _countNews = paginate.count;
       notifyListeners();
       log("Berhasil mendapatkan news user : ${_news.length}");
       return true;
