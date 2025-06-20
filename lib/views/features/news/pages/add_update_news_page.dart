@@ -1,20 +1,24 @@
 import 'dart:developer';
-import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
+// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/app/utils/app_notif.dart';
 import 'package:ora_news/app/utils/field_validator_builder.dart';
+import 'package:ora_news/data/models/news_models.dart';
 import 'package:ora_news/data/models/user_models.dart';
+import 'package:ora_news/data/provider/news_public_provider.dart';
+import 'package:ora_news/data/provider/user_news_provider.dart';
 import 'package:ora_news/views/widgets/custom_button.dart';
 import 'package:ora_news/views/widgets/custom_dropdown_field.dart';
 import 'package:ora_news/views/widgets/custom_field_label.dart';
 import 'package:ora_news/views/widgets/custom_form_field.dart';
+import 'package:provider/provider.dart';
 
 class AddUpdateNewsPage extends StatefulWidget {
   // Jika newsData tidak null, maka ini adalah mode update
@@ -32,66 +36,84 @@ class _AddUpdateNewsPageState extends State<AddUpdateNewsPage> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _titleController;
   late final TextEditingController _bodyController;
+  late final TextEditingController _imageUrlController;
 
-  File? _selectedImageFile;
+  // PlatformFile? _selectedImageFile;
   String? _selectedCategory;
-
-  final List<String> _categories = [
-    'Olahraga',
-    'Politik',
-    'Teknologi',
-    'Kesehatan',
-    'Hiburan',
-  ];
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.newsData?.title ?? '');
     _bodyController = TextEditingController(text: widget.newsData?.content ?? '');
+    _imageUrlController = TextEditingController(text: widget.newsData?.imageUrl ?? '');
     _selectedCategory = widget.newsData?.category.id;
+
+    Future.microtask(() => context.read<NewsPublicProvider>().fetchCategory());
   }
 
   @override
   void dispose() {
     _titleController.dispose();
     _bodyController.dispose();
+    _imageUrlController.dispose();
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'png', 'jpeg'],
-    );
+  // Future<void> _pickImage() async {
+  //   FilePickerResult? result = await FilePicker.platform.pickFiles(
+  //     type: FileType.custom,
+  //     allowedExtensions: ['jpg', 'png', 'jpeg'],
+  //   );
 
-    if (result != null) {
-      setState(() {
-        _selectedImageFile = File(result.files.single.path!);
-      });
-    } else {}
-  }
+  //   if (result != null) {
+  //     setState(() {
+  //       _selectedImageFile = result.files.single;
+  //     });
+  //   } else {}
+  // }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      if (_selectedImageFile == null && !widget.isUpdateMode) {
-        AppNotif.error(context, message: 'Silakan unggah gambar terlebih dahulu');
-        return;
-      }
+      // if (_selectedImageFile == null && !widget.isUpdateMode) {
+      //   AppNotif.error(context, message: 'Silakan unggah gambar terlebih dahulu');
+      //   return;
+      // }
 
       log('Title: ${_titleController.text}');
       log('Body: ${_bodyController.text}');
       log('Category: $_selectedCategory');
-      log('Image Path: ${_selectedImageFile?.path}');
+      log('Image Path: ${_imageUrlController.text}');
+
+      final newsProvider = Provider.of<UserNewsProvider>(context, listen: false);
 
       if (widget.isUpdateMode) {
         log('Updating news...');
       } else {
-        log('Publishing new news...');
-      }
+        log('Create News ...');
+        final bool success = await newsProvider.createNews(
+          title: _titleController.text,
+          content: _bodyController.text,
+          categoryId: _selectedCategory!,
+          imageUrl: _imageUrlController.text,
+        );
 
-      // Kembali ke halaman sebelumnya setelah submit
-      context.pop();
+        if (success) {
+          if (mounted) {
+            AppNotif.success(context, message: "Berita telah berhasil di buat");
+            await newsProvider.fetchUserNews();
+            context.goNamed(RouteNames.myNews);
+          }
+        } else {
+          if (mounted) {
+            AppNotif.error(
+              context,
+              message: newsProvider.errorMessage ?? "Terjadi kesalahan ",
+            );
+            context.goNamed(RouteNames.myNews);
+          }
+        }
+      }
     }
   }
 
@@ -143,27 +165,42 @@ class _AddUpdateNewsPageState extends State<AddUpdateNewsPage> {
                     ),
 
                     AppSpacing.vsLarge,
-                    const CustomFieldLabel(text: 'Upload Image'),
-                    _buildImagePickerField(),
+                    // const CustomFieldLabel(text: 'Upload Image'),
+                    // _buildImagePickerField(),
+                    CustomFormField(
+                      labelText: 'Gambar Url',
+                      controller: _imageUrlController,
+                      hintText: 'Masukkan Url Gambar Berita',
+                      boxSize: FormFieldSize.large,
+                      validator:
+                          FieldValidatorBuilder(
+                            'Image Url',
+                          ).required().minLength(5).build(),
+                    ),
                     AppSpacing.vsLarge,
                     const CustomFieldLabel(text: 'Kategory'),
-                    CustomDropdownField<String>(
-                      value: _selectedCategory,
-                      hintText: 'Dropdown Kategory',
-                      items:
-                          _categories.map((String category) {
-                            return DropdownMenuItem<String>(
-                              value: category,
-                              child: Text(category),
-                            );
-                          }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedCategory = newValue;
-                        });
+                    Consumer<NewsPublicProvider>(
+                      builder: (context, provider, _) {
+                        return CustomDropdownField<String>(
+                          value: _selectedCategory,
+                          hintText: 'Dropdown Kategory',
+                          items:
+                              provider.categories.map((CategoryNews category) {
+                                return DropdownMenuItem<String>(
+                                  value: category.id,
+                                  child: Text(category.name),
+                                );
+                              }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectedCategory = newValue;
+                            });
+                          },
+                          validator:
+                              (value) =>
+                                  value == null ? 'Kategori tidak boleh kosong' : null,
+                        );
                       },
-                      validator:
-                          (value) => value == null ? 'Kategori tidak boleh kosong' : null,
                     ),
                   ],
                 ),
@@ -176,38 +213,38 @@ class _AddUpdateNewsPageState extends State<AddUpdateNewsPage> {
     );
   }
 
-  Widget _buildImagePickerField() {
-    final fileName = _selectedImageFile?.path.split('/').last ?? 'Choose an image...';
+  // Widget _buildImagePickerField() {
+  //   final fileName = _selectedImageFile?.name ?? 'Choose an image...';
 
-    return GestureDetector(
-      onTap: _pickImage,
-      child: Container(
-        height: AppSpacing.boxLarge, // Sesuaikan tinggi agar sama dengan dropdown
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(AppSpacing.roundedMedium),
-          border: Border.all(color: AppColors.grey400),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                fileName,
-                style:
-                    _selectedImageFile != null
-                        ? AppTypography.bodyText1
-                        : AppTypography.bodyText1.copyWith(color: AppColors.textSecondary),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const Icon(Icons.file_upload_outlined, color: AppColors.grey600),
-          ],
-        ),
-      ),
-    );
-  }
+  //   return GestureDetector(
+  //     onTap: _pickImage,
+  //     child: Container(
+  //       height: AppSpacing.boxLarge, // Sesuaikan tinggi agar sama dengan dropdown
+  //       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+  //       decoration: BoxDecoration(
+  //         color: Colors.transparent,
+  //         borderRadius: BorderRadius.circular(AppSpacing.roundedMedium),
+  //         border: Border.all(color: AppColors.grey400),
+  //       ),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Expanded(
+  //             child: Text(
+  //               fileName,
+  //               style:
+  //                   _selectedImageFile != null
+  //                       ? AppTypography.bodyText1
+  //                       : AppTypography.bodyText1.copyWith(color: AppColors.textSecondary),
+  //               overflow: TextOverflow.ellipsis,
+  //             ),
+  //           ),
+  //           const Icon(Icons.file_upload_outlined, color: AppColors.grey600),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildBottomSection() {
     return Container(

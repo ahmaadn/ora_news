@@ -174,4 +174,26 @@ class NewsPublicProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<bool> fetchCategory() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final results = await NewsService.getCategories();
+
+    log("Berhasil ambil kategori ");
+
+    if (results.success) {
+      _categories = results.data.data;
+      log("Jumlah Categories ${_categories.length}");
+      _errorMessage = null;
+      notifyListeners();
+      return true;
+    } else {
+      _errorMessage = "Error fetching news";
+      notifyListeners();
+      return false;
+    }
+  }
 }
