@@ -7,6 +7,7 @@ import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/constants/route_names.dart';
+import 'package:ora_news/app/utils/app_date_formatter.dart';
 import 'package:ora_news/app/utils/image_placeholder.dart';
 import 'package:ora_news/data/models/news_models.dart';
 
@@ -53,7 +54,7 @@ class NewsCard extends StatelessWidget {
             ),
             AppSpacing.vsMedium,
             Text(
-              trending.user.name!,
+              trending.user.name,
               style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
             ),
             AppSpacing.vsSmall,
@@ -67,7 +68,7 @@ class NewsCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  trending.publishedAt.toString(),
+                  AppDateFormatter.formatFullDate(trending.publishedAt),
                   style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
                 ),
                 TextButton(

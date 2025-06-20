@@ -82,20 +82,6 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      // Proses sign up di sini
-      String fullName = _fullNameController.text;
-      String email = _emailController.text;
-      String phoneNumber = _usernameController.text;
-      String password = _passwordController.text;
-      log('Full Name: $fullName, Email: $email, Phone: $phoneNumber, Password: $password');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Processing Sign Up...')));
-    }
-  }
-
   void _navigateToLogin() {
     log('Navigate to Login Screen');
     context.goNamed(RouteNames.login);

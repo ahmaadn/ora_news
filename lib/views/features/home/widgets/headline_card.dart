@@ -7,6 +7,7 @@ import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/constants/route_names.dart';
+import 'package:ora_news/app/utils/app_date_formatter.dart';
 import 'package:ora_news/app/utils/image_placeholder.dart';
 import 'package:ora_news/data/models/news_models.dart';
 
@@ -20,9 +21,7 @@ class HeadlineCard extends StatelessWidget {
     final imageUrl =
         headline.imageUrl ?? 'https://placehold.co/600x400/grey/white?text=No+Image';
     final title = headline.title;
-    final date =
-        '${headline.publishedAt.day.toString().padLeft(2, '0')}/${headline.publishedAt.month.toString().padLeft(2, '0')}' ??
-        '';
+    final date = AppDateFormatter.formatTimeAgo(headline.publishedAt);
     final source = "By ${headline.user.name}";
 
     return GestureDetector(

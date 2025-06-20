@@ -5,6 +5,7 @@ import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/constants/route_names.dart';
+import 'package:ora_news/app/utils/app_date_formatter.dart';
 import 'package:ora_news/app/utils/image_placeholder.dart' show ImagePlaceholder;
 import 'package:ora_news/data/models/news_models.dart';
 import 'package:ora_news/data/provider/news_public_provider.dart';
@@ -82,7 +83,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                 Row(
                   children: [
                     Text(
-                      'By ${provider.newsArticleDetailShow?.user.name} on ${provider.newsArticleDetailShow?.publishedAt.toString()}',
+                      'By ${provider.newsArticleDetailShow?.user.name} on ${AppDateFormatter.formatFullDate(provider.newsArticleDetailShow?.publishedAt)}',
                       style: AppTypography.caption.copyWith(color: AppColors.grey),
                     ),
                     const Spacer(),
@@ -120,14 +121,14 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                 // Image Caption (Placeholder)
                 Text(
                   provider.newsArticleDetailShow?.title ?? "News Title",
-                  style: AppTypography.bodyText1.copyWith(color: AppColors.grey),
+                  style: AppTypography.bodyText2.copyWith(color: AppColors.grey),
                 ),
                 AppSpacing.vsLarge,
 
                 // Article Content
                 Text(
                   provider.newsArticleDetailShow?.content ?? "News Content",
-                  style: AppTypography.bodyText2.copyWith(
+                  style: AppTypography.bodyText1.copyWith(
                     height: 1.5,
                   ), // Tinggi baris untuk keterbacaan
                 ),

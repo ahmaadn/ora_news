@@ -7,6 +7,7 @@ import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/constants/route_names.dart';
+import 'package:ora_news/app/utils/app_date_formatter.dart';
 import 'package:ora_news/app/utils/image_placeholder.dart';
 import 'package:ora_news/data/models/news_models.dart';
 
@@ -63,7 +64,7 @@ class InlineCard extends StatelessWidget {
                     ),
                     AppSpacing.vsSmall,
                     Text(
-                      '${highlight.user.name} • ${highlight.publishedAt}',
+                      '${highlight.user.name} • ${AppDateFormatter.formatTimeAgo(highlight.publishedAt)}',
                       style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
                     ),
                   ],
