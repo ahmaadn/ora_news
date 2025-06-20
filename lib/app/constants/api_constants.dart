@@ -7,6 +7,7 @@ class ApiConstants {
   static const String requestPasswordChangeEndpoint = '/auth/request-password-change';
   static const String newsPublicEndpoint = '/news';
   static const String categoryEndpoint = '/category';
+  static const String myListNewsEndpoint = '/me/news';
 
   static const Map<String, dynamic> defaultParamNews = {
     'page': 1,
