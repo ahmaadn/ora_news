@@ -7,21 +7,24 @@ class AppDateFormatter {
   /// Contoh: 02-04-2025
   static String formatWithHyphen(DateTime? date) {
     if (date == null) return '';
-    return DateFormat('dd-MM-yyyy').format(date);
+    final localDate = date.toLocal();
+    return DateFormat('dd-MM-yyyy').format(localDate);
   }
 
   /// Memformat tanggal menjadi "dd/MM/yyyy".
   /// Contoh: 02/04/2025
   static String formatWithSlash(DateTime? date) {
     if (date == null) return '';
-    return DateFormat('dd/MM/yyyy').format(date);
+    final localDate = date.toLocal();
+    return DateFormat('dd/MM/yyyy').format(localDate);
   }
 
   /// Memformat tanggal menjadi format "Bulan Hari, Tahun".
   /// Contoh: April 02, 2025
   static String formatFullDate(DateTime? date) {
     if (date == null) return '';
-    return DateFormat('MMMM d, yyyy').format(date);
+    final localDate = date.toLocal();
+    return DateFormat('MMMM d, yyyy').format(localDate);
   }
 
   /// Mengonversi tanggal menjadi format waktu relatif (time ago).
@@ -31,8 +34,9 @@ class AppDateFormatter {
       return 'Unknown time';
     }
 
+    final localDate = date.toLocal();
     final now = DateTime.now();
-    final difference = now.difference(date);
+    final difference = now.difference(localDate);
 
     if (difference.inSeconds < 5) {
       return 'just now';
