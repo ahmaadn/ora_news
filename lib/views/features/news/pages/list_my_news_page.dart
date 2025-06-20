@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
+import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/data/provider/user_news_provider.dart';
 import 'package:ora_news/views/features/news/widgets/user_inline_card.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +28,21 @@ class _ListMyNewsPageState extends State<ListMyNewsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.surface,
+      appBar: AppBar(
+        backgroundColor: AppColors.surface,
+        elevation: 0,
+        leading: BackButton(
+          color: AppColors.textPrimary,
+          onPressed: () {
+            context.goNamed(RouteNames.home);
+          },
+        ),
+        title: Text(
+          'Publish News',
+          style: AppTypography.headline2.copyWith(color: AppColors.textPrimary),
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppSpacing.m),
@@ -35,20 +54,11 @@ class _ListMyNewsPageState extends State<ListMyNewsPage> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RichText(
-                        text: TextSpan(
-                          style: AppTypography.headline3.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                          children: [
-                            TextSpan(
-                              text:
-                                  'Total Publish News : ${provider.news.length.toString()}',
-                              style: AppTypography.title3,
-                            ),
-                          ],
-                        ),
+                      Text(
+                        'Total Publish News : ${provider.news.length.toString()}',
+                        style: AppTypography.headline2,
                       ),
+
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: AppSpacing.s),
                         child: Divider(),
@@ -59,7 +69,14 @@ class _ListMyNewsPageState extends State<ListMyNewsPage> {
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           final result = provider.news[index];
-                          return UserInlineCard(article: result);
+                          return Column(
+                            children: [
+                              UserInlineCard(article: result),
+                              AppSpacing.vsSmall,
+                              const Divider(),
+                              AppSpacing.vsSmall,
+                            ],
+                          );
                         },
                       ),
                     ],
@@ -69,6 +86,14 @@ class _ListMyNewsPageState extends State<ListMyNewsPage> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          log('Add new news');
+        },
+        backgroundColor: AppColors.success,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, color: AppColors.textLight),
       ),
     );
   }
