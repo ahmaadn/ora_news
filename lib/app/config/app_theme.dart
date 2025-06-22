@@ -101,7 +101,7 @@ class AppTheme {
     ),
 
     // Konfigurasi Card
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       elevation: 2.0,
       color: AppColors.surface,
       shape: RoundedRectangleBorder(
