@@ -30,73 +30,82 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Consumer<NewsPublicProvider>(
       builder: (context, provider, child) {
-        // Tampilkan loading indicator saat data awal sedang diambil.
         if (provider.isLoading && provider.categories.isEmpty) {
-          return Scaffold(
-            backgroundColor: AppColors.background,
-            appBar: AppBar(flexibleSpace: MainAppBar()),
-            body: const Center(child: CircularProgressIndicator()),
+          return _buildScaffold(
+            provider: provider,
+            displayCategories: [CategoryNews(id: 'all', name: 'All')],
+            body: const Center(child: CircularProgressIndicator(color: AppColors.primary)),
           );
         }
 
-        // Tampilkan error jika terjadi dan tidak ada data.
         if (provider.errorMessage != null && provider.categories.isEmpty) {
-          return Scaffold(
-            backgroundColor: AppColors.background,
-            appBar: AppBar(flexibleSpace: MainAppBar()),
+          return _buildScaffold(
+            provider: provider,
+            displayCategories: [CategoryNews(id: 'all', name: 'All')],
             body: Center(child: Text('Error: ${provider.errorMessage}')),
           );
         }
 
-        // Siapkan daftar kategori untuk TabBar, tambahkan "Semua" di awal.
         final displayCategories = [
           CategoryNews(id: 'all', name: 'All'),
           ...provider.categories,
         ];
-        return DefaultTabController(
-          length: displayCategories.length,
-          child: Scaffold(
-            backgroundColor: AppColors.background,
-            body: SafeArea(
-              child: NestedScrollView(
-                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-                  return [
-                    SliverAppBar(
-                      backgroundColor: AppColors.background,
-                      automaticallyImplyLeading: false,
-                      floating: true,
-                      snap: true,
-                      flexibleSpace: MainAppBar(),
-                      bottom: _buildCategoryTabs(
-                        provider: provider,
-                        displayCategories: displayCategories,
-                      ),
-                    ),
-                  ];
-                },
-                body: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppSpacing.vsMedium,
-                      HeadlineCarousel(headlines: provider.headlines),
-                      AppSpacing.vsLarge,
-                      SectionHeader(title: 'Highlights'),
-                      HighlightsList(highlights: provider.highlights),
-                      AppSpacing.vsLarge,
-                      SectionHeader(title: '🔥 Trending'),
-                      TrendingList(trendingNews: provider.highlights),
-                      AppSpacing.vsMedium,
-                      _buildLoadMoreButton(),
-                      AppSpacing.vsLarge,
-                    ],
-                  ),
-                ),
-              ),
+
+        return _buildScaffold(
+          provider: provider,
+          displayCategories: displayCategories,
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppSpacing.vsMedium,
+                HeadlineCarousel(headlines: provider.headlines),
+                AppSpacing.vsLarge,
+                SectionHeader(title: 'Highlights'),
+                HighlightsList(highlights: provider.highlights),
+                AppSpacing.vsLarge,
+                SectionHeader(title: '🔥 Trending'),
+                TrendingList(trendingNews: provider.highlights),
+                AppSpacing.vsMedium,
+                _buildLoadMoreButton(),
+                AppSpacing.vsLarge,
+              ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildScaffold({
+    required NewsPublicProvider provider,
+    required List<CategoryNews> displayCategories,
+    required Widget body,
+  }) {
+    return DefaultTabController(
+      length: displayCategories.length,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SafeArea(
+          child: NestedScrollView(
+            headerSliverBuilder:
+                (context, innerBoxIsScrolled) => [
+                  SliverAppBar(
+                    backgroundColor: AppColors.background,
+                    automaticallyImplyLeading: false,
+                    floating: true,
+                    snap: true,
+                    flexibleSpace: MainAppBar(),
+                    bottom: _buildCategoryTabs(
+                      provider: provider,
+                      displayCategories: displayCategories,
+                    ),
+                  ),
+                ],
+            body: body,
+          ),
+        ),
+      ),
     );
   }
 
@@ -125,12 +134,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             tabAlignment: TabAlignment.start,
             onTap: (index) {
               final categoryId = displayCategories[index].id;
-
               if (categoryId == 'all') {
                 provider.fetchHomeData();
-                return;
+              } else {
+                provider.fetchNewsByCategory(categoryId);
               }
-              provider.fetchNewsByCategory(categoryId == 'all' ? null : categoryId);
             },
             tabs: displayCategories.map((category) => Tab(text: category.name)).toList(),
           ),
