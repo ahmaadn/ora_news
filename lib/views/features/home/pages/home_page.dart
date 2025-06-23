@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 HighlightsList(highlights: provider.highlights),
                 AppSpacing.vsLarge,
                 SectionHeader(title: '🔥 Trending'),
-                TrendingList(trendingNews: provider.highlights),
+                TrendingList(trendingNews: provider.trending),
                 AppSpacing.vsMedium,
                 _buildLoadMoreButton(),
                 AppSpacing.vsLarge,

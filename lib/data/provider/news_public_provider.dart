@@ -59,8 +59,8 @@ class NewsPublicProvider with ChangeNotifier {
       log("Jumlah Artikel ${pagination.items.length}");
 
       _headlines = pagination.items.take(5).toList();
-      _trending = pagination.items.skip(5).take(5).toList();
-      _highlights = pagination.items.skip(10).toList();
+      _highlights = pagination.items.skip(5).take(5).toList();
+      _trending = pagination.items.skip(10).toList();
 
       _categories = results[1].data.data;
       log("Jumlah Categories ${_categories.length}");
@@ -101,8 +101,9 @@ class NewsPublicProvider with ChangeNotifier {
       log("Jumlah Artikel ${pagination.items.length}");
 
       _headlines = pagination.items.take(5).toList();
-      _trending = pagination.items.skip(5).take(5).toList();
-      _highlights = pagination.items.skip(10).toList();
+      _highlights = pagination.items.skip(5).take(5).toList();
+      _trending = pagination.items.skip(10).toList();
+
       _errorMessage = null;
       log("Berhasil get news by Category $categoryId");
       notifyListeners();
