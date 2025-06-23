@@ -17,10 +17,15 @@ class PageContent extends StatelessWidget {
         Spacer(),
         Image.asset(_page.imageUrl, height: MediaQuery.of(context).size.height * 0.35),
         AppSpacing.vsLarge,
-        Text(
-          _page.heading,
-          textAlign: TextAlign.left,
-          style: AppTypography.title3.copyWith(color: AppColors.textPrimary),
+        SizedBox(
+          height: 70,
+          child: Text(
+            _page.heading,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.left,
+            style: AppTypography.title3.copyWith(color: AppColors.textPrimary),
+          ),
         ),
         AppSpacing.vsMedium,
         SizedBox(
