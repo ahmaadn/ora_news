@@ -60,7 +60,6 @@ class RegisterForm extends StatelessWidget {
             controller: usernameController,
             labelText: "Username",
             hintText: 'Your username',
-            keyboardType: TextInputType.phone,
             validator: FieldValidatorBuilder('Username').required().minLength(5).build(),
             textInputAction: TextInputAction.next,
             collapseError: false,

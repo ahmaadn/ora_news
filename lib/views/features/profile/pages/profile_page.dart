@@ -147,7 +147,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             controller: _usernameController,
                             labelText: "Username",
                             hintText: 'Your username',
-                            keyboardType: TextInputType.phone,
                             textInputAction: TextInputAction.next,
                             collapseError: false,
                             boxSize: FormFieldSize.large,

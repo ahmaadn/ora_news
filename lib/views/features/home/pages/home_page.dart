@@ -8,6 +8,7 @@ import 'package:ora_news/views/features/home/widgets/headline_carousel.dart';
 import 'package:ora_news/views/features/home/widgets/highlights_list.dart';
 import 'package:ora_news/views/features/home/widgets/section_header.dart';
 import 'package:ora_news/views/features/home/widgets/trending_list.dart';
+import 'package:ora_news/views/widgets/app_button.dart';
 import 'package:ora_news/views/widgets/custom_button.dart';
 import 'package:ora_news/views/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+  final allNewsCategory = CategoryNews(id: 'all', name: 'All News');
+
   @override
   void initState() {
     super.initState();
@@ -30,50 +33,43 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Consumer<NewsPublicProvider>(
       builder: (context, provider, child) {
-        if (provider.isLoading && provider.categories.isEmpty) {
-          return _buildScaffold(
-            provider: provider,
-            displayCategories: [CategoryNews(id: 'all', name: 'All')],
-            body: const Center(child: CircularProgressIndicator(color: AppColors.primary)),
-          );
-        }
-
-        if (provider.errorMessage != null && provider.categories.isEmpty) {
-          return _buildScaffold(
-            provider: provider,
-            displayCategories: [CategoryNews(id: 'all', name: 'All')],
-            body: Center(child: Text('Error: ${provider.errorMessage}')),
-          );
-        }
-
-        final displayCategories = [
-          CategoryNews(id: 'all', name: 'All'),
-          ...provider.categories,
-        ];
+        final displayCategories = [allNewsCategory, ...provider.categories];
 
         return _buildScaffold(
           provider: provider,
           displayCategories: displayCategories,
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppSpacing.vsMedium,
-                HeadlineCarousel(headlines: provider.headlines),
-                AppSpacing.vsLarge,
-                SectionHeader(title: 'Highlights'),
-                HighlightsList(highlights: provider.highlights),
-                AppSpacing.vsLarge,
-                SectionHeader(title: '🔥 Trending'),
-                TrendingList(trendingNews: provider.trending),
-                AppSpacing.vsMedium,
-                _buildLoadMoreButton(),
-                AppSpacing.vsLarge,
-              ],
-            ),
-          ),
+          body: _buildBodyContent(provider),
         );
       },
+    );
+  }
+
+  Widget _buildBodyContent(NewsPublicProvider provider) {
+    if (provider.isLoading && provider.categories.isEmpty) {
+      return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+    }
+
+    if (provider.errorMessage != null && provider.categories.isEmpty) {
+      return Center(child: Text('Error: ${provider.errorMessage}'));
+    }
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppSpacing.vsMedium,
+          HeadlineCarousel(headlines: provider.headlines),
+          AppSpacing.vsLarge,
+          SectionHeader(title: 'Highlights'),
+          HighlightsList(highlights: provider.highlights),
+          AppSpacing.vsLarge,
+          SectionHeader(title: '🔥 Trending'),
+          TrendingList(trendingNews: provider.trending),
+          AppSpacing.vsMedium,
+          _buildLoadMoreButton(provider),
+          AppSpacing.vsLarge,
+        ],
+      ),
     );
   }
 
@@ -147,15 +143,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _buildLoadMoreButton() {
+  Widget _buildLoadMoreButton(NewsPublicProvider provider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-      child: CustomButton(
-        buttonType: CustomButtonType.outline,
-        onPressed: () {},
-        text: 'Load More',
+      child: PrimaryButton(
+        onPressed: () {
+          provider.loadMoreNews();
+        },
+        text: "Load More",
         width: double.infinity,
-        buttonSize: CustomButtonSize.large,
+        buttonSize: CustomButtonSize.medium,
+        backgroundColor: AppColors.primary,
       ),
     );
   }
