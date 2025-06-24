@@ -1,4 +1,4 @@
-package com.example.ora_news
+package com.oranews.oranews
 
 import io.flutter.embedding.android.FlutterActivity
 
