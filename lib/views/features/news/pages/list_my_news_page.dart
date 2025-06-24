@@ -12,6 +12,7 @@ import 'package:ora_news/data/models/user_models.dart';
 import 'package:ora_news/data/provider/user_news_provider.dart';
 import 'package:ora_news/views/features/news/widgets/user_inline_card.dart';
 import 'package:ora_news/views/widgets/app_button.dart';
+import 'package:ora_news/views/widgets/load_more_button.dart';
 import 'package:provider/provider.dart';
 
 class ListMyNewsPage extends StatefulWidget {
@@ -173,10 +174,16 @@ class _ListMyNewsPageState extends State<ListMyNewsPage> {
                           );
                         },
                       ),
-                      OutlineButtonWidget(
-                        onPressed: () {},
-                        text: "Load More",
-                        width: double.infinity,
+                      // OutlineButtonWidget(
+                      //   onPressed: () {},
+                      //   text: "Load More",
+                      //   width: double.infinity,
+                      // ),
+                      LoadMoreButton(
+                        isLoading: provider.isLoadingMore,
+                        onPressed: () {
+                          provider.fetchMoreNews();
+                        },
                       ),
                     ],
                   );

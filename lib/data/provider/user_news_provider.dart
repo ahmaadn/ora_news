@@ -11,6 +11,9 @@ class UserNewsProvider with ChangeNotifier {
   bool _isLoadingUploadImage = false;
   String? _errorMessage;
   String? _errorMessageUploadImge;
+  int _page = 1;
+  int defauiltPerPage = 20;
+  bool _isLoadingMore = false;
 
   List<MyNewsArticle> _news = [];
   int _countNews = 0;
@@ -21,6 +24,8 @@ class UserNewsProvider with ChangeNotifier {
   int get countNews => _countNews;
   bool get isLoadingUploadImage => _isLoadingUploadImage;
   String? get errorMessageUploadImge => _errorMessageUploadImge;
+  int get page => _page;
+  bool get isLoadingMore => _isLoadingMore;
 
   String get userId => _userId;
 
@@ -157,6 +162,33 @@ class UserNewsProvider with ChangeNotifier {
       return true;
     } else {
       _errorMessageUploadImge = "TIdak bisa upload gambar";
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> fetchMoreNews() async {
+    _isLoadingMore = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final results = await UserNewsService.getAllNews(
+      page: _page + 1,
+      perPage: defauiltPerPage,
+      latest: true,
+    );
+
+    if (results.success) {
+      final PaginationMyNews paginate = results.data;
+      _news.addAll(paginate.items);
+      _isLoadingMore = false;
+      _page += 1;
+      notifyListeners();
+      log("Berhasil mendapatkan news user : ${_news.length}");
+      return true;
+    } else {
+      _errorMessage = "Error fetching news";
+      _isLoadingMore = false;
       notifyListeners();
       return false;
     }
