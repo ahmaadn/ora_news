@@ -17,7 +17,7 @@ class NewsPublicProvider with ChangeNotifier {
 
   NewsArticle? _newsArticleDetailShow;
 
-  String? _selectedCategoryId;
+  String? _selectedCategoryId = null;
   int _page = 1;
   static const int _defaultPerPage = 20;
 
@@ -84,6 +84,9 @@ class NewsPublicProvider with ChangeNotifier {
         _highlights = pagination.items.skip(5).take(5).toList();
         _trending = pagination.items.skip(10).toList();
         _categories = results[1].data.data;
+
+        _selectedCategoryId = null;
+        _page = 1;
 
         _setLoading(false, message: null);
         return true;
