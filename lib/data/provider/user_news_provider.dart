@@ -37,6 +37,7 @@ class UserNewsProvider with ChangeNotifier {
   Future<bool> fetchUserNews() async {
     _isLoading = true;
     _errorMessage = null;
+    _page = 1;
     notifyListeners();
 
     final results = await UserNewsService.getAllNews();
