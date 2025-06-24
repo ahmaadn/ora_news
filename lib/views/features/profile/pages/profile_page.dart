@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
+import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/app/utils/app_notif.dart';
 import 'package:ora_news/data/provider/auth_provider.dart';
@@ -40,10 +41,61 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  void _logout() {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.logout();
-    context.goNamed(RouteNames.login);
+  Future<void> _showLogoutConfirmationDialog() async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.roundedLarge),
+          ),
+          title: Text(
+            'Konfirmasi Logout',
+            textAlign: TextAlign.center,
+            style: AppTypography.headline2,
+          ),
+          content: Text(
+            'Apakah Anda yakin ingin keluar dari aplikasi ini? ',
+            textAlign: TextAlign.center,
+            style: AppTypography.bodyText2,
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actionsPadding: const EdgeInsets.only(
+            bottom: AppSpacing.m,
+            left: AppSpacing.m,
+            right: AppSpacing.m,
+          ),
+          actions: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                  child: PrimaryButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    text: "Cancel",
+                    backgroundColor: AppColors.grey200,
+                    foregroundColor: AppColors.textPrimary,
+                  ),
+                ),
+                AppSpacing.hsMedium,
+                Expanded(
+                  child: PrimaryButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    text: "Logout",
+                    backgroundColor: AppColors.error,
+                    foregroundColor: AppColors.textLight,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed == true) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      authProvider.logout();
+      context.goNamed(RouteNames.login);
+    }
   }
 
   Future<void> _saveChanges() async {
@@ -190,7 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           AppSpacing.vsSmall,
                           PrimaryButton(
-                            onPressed: _logout,
+                            onPressed: _showLogoutConfirmationDialog,
                             text: 'Logout',
                             width: double.infinity,
                             buttonSize: CustomButtonSize.medium,
