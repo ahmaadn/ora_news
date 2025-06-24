@@ -1,13 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
-import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/app/utils/app_notif.dart';
-import 'package:ora_news/app/utils/field_validator_builder.dart';
 import 'package:ora_news/data/provider/auth_provider.dart';
 import 'package:ora_news/views/widgets/app_button.dart';
 import 'package:ora_news/views/widgets/custom_button.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
@@ -9,8 +8,6 @@ import 'package:ora_news/views/features/home/widgets/headline_carousel.dart';
 import 'package:ora_news/views/features/home/widgets/highlights_list.dart';
 import 'package:ora_news/views/features/home/widgets/section_header.dart';
 import 'package:ora_news/views/features/home/widgets/trending_list.dart';
-import 'package:ora_news/views/widgets/app_button.dart';
-import 'package:ora_news/views/widgets/custom_button.dart';
 import 'package:ora_news/views/widgets/load_more_button.dart';
 import 'package:ora_news/views/widgets/main_app_bar.dart';
 import 'package:provider/provider.dart';
