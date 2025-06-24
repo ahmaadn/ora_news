@@ -1,6 +1,6 @@
 # Ora News
 
-## Anggota Kelompok
+## Anggota Kelompok 7
 
   - Ahmad Nur Sahid (2206042)
   - Deden Ruli Cahyadi (2206054)
