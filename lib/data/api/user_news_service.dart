@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart' show lookupMimeType;
 import 'package:ora_news/app/constants/api_constants.dart';
 import 'package:ora_news/data/models/message_api_model.dart';
 import 'package:ora_news/data/models/user_models.dart';
+import 'package:http_parser/http_parser.dart';
 
 class UserNewsService {
   static Future<MessageApiModel> getAllNews({
@@ -75,7 +76,7 @@ class UserNewsService {
     required String title,
     required String content,
     required String categoryId,
-    required String imageUrl,
+    String? imageUrl,
   }) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.myListNewsEndpoint}');
 
@@ -87,7 +88,7 @@ class UserNewsService {
           'title': title,
           'content': content,
           'category_id': categoryId,
-          "image_url": imageUrl,
+          if (imageUrl != null) "image_url": imageUrl,
         }),
       );
       log("responde done : ${response.statusCode}");
@@ -147,40 +148,40 @@ class UserNewsService {
     }
   }
 
-  static Future<MessageApiModel> uploadImage(String newsId, PlatformFile file) async {
+  static Future<MessageApiModel> uploadImage({
+    required String newsId,
+    required File file,
+  }) async {
     final url = Uri.parse(
-      '${ApiConstants.baseUrl}${ApiConstants.myListNewsEndpoint}/$newsId',
+      '${ApiConstants.baseUrl}${ApiConstants.myListNewsEndpoint}/$newsId/upload-image',
     );
 
     try {
       var request = http.MultipartRequest('POST', url);
-      if (kIsWeb) {
-        // Untuk Web: Gunakan fromBytes
-        request.files.add(
-          http.MultipartFile.fromBytes(
-            'image', // nama field
-            file.bytes as List<int>,
-            filename: file.name,
-          ),
+
+      final String? mimeType = lookupMimeType(file.path);
+      final MediaType contentType = MediaType.parse(mimeType ?? 'application/octet-stream');
+
+      request.files.add(
+        await http.MultipartFile.fromPath('file', file.path, contentType: contentType),
+      );
+
+      request.headers.addAll(await ApiConstants.authHeadersOnly);
+
+      final http.StreamedResponse response = await request.send();
+
+      final String responseBody = await response.stream.bytesToString();
+
+      log("Responde done : ${response.statusCode} , $responseBody, $url, ${file.path}");
+      if (response.statusCode == 202 || response.statusCode == 200) {
+        return MessageApiModel.success(
+          message: "Image berhasil diupload untuk id : $newsId",
+          data: null,
         );
       } else {
-        // Untuk Mobile/Desktop: Gunakan fromPath
-        // request.files.add(
-        //   await http.MultipartFile.fromPath(
-        //     'image', // nama field
-        //     file.path,
-        //   ),
-        // );
-      }
-
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-
-      log("Responde done : ${response.statusCode}");
-      if (response.statusCode == 202) {
-        log("Upload Gambar berhasil untuk id : $newsId");
-        return MessageApiModel.success(message: "Data berhasil dihapus", data: null);
-      } else {
+        if (response.statusCode == 503) {
+          return MessageApiModel.error(message: "Image Service Not Available");
+        }
         return MessageApiModel.error(message: "Failed to delete news");
       }
     } catch (e) {

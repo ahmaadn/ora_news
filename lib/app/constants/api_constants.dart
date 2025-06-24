@@ -31,6 +31,12 @@ class ApiConstants {
     };
   }
 
+  static Future<Map<String, String>> get authHeadersOnly async {
+    var token = await TokenManager.getTokens();
+
+    return {'Authorization': '${token!.tokenType} ${token.accessToken}'};
+  }
+
   static Map<String, String> get headers {
     return {'Content-Type': 'application/json'};
   }

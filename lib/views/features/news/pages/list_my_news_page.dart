@@ -141,7 +141,7 @@ class _ListMyNewsPageState extends State<ListMyNewsPage> {
                                   Expanded(
                                     child: PrimaryButton(
                                       onPressed: () {
-                                        context.goNamed(
+                                        context.pushNamed(
                                           RouteNames.updateNews,
                                           pathParameters: {'id': result.id},
                                           extra: AppRouteInformation<MyNewsArticle>(
