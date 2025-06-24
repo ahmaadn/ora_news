@@ -28,7 +28,8 @@ class _UserInlineCardState extends State<UserInlineCard> {
         log('Masuk Ke halaman detail news');
         log("${GoRouter.of(context).state.name}");
 
-        context.goNamed(RouteNames.newsDetail, pathParameters: {'id': widget.article.id});
+        // context.goNamed(RouteNames.newsDetail, pathParameters: {'id': widget.article.id});
+        context.pushNamed(RouteNames.newsDetail, pathParameters: {'id': widget.article.id});
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),

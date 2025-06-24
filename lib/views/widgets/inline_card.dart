@@ -23,7 +23,8 @@ class InlineCard extends StatelessWidget {
         log('Masuk Ke halaman detail news');
         log("${GoRouter.of(context).state.name}");
 
-        context.goNamed(RouteNames.newsDetail, pathParameters: {'id': highlight.id});
+        // context.goNamed(RouteNames.newsDetail, pathParameters: {'id': highlight.id});
+        context.pushNamed(RouteNames.newsDetail, pathParameters: {'id': highlight.id});
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),

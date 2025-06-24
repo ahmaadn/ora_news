@@ -33,7 +33,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
   }
 
   void backToHome() {
-    context.goNamed(RouteNames.home);
+    context.pop();
   }
 
   @override

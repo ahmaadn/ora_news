@@ -30,7 +30,9 @@ class HeadlineCard extends StatelessWidget {
         log('Masuk Ke halaman detail news');
         log("${GoRouter.of(context).state.name}");
 
-        context.goNamed(RouteNames.newsDetail, pathParameters: {'id': headline.id});
+        context.pushNamed(RouteNames.newsDetail, pathParameters: {'id': headline.id});
+
+        // context.goNamed(RouteNames.newsDetail, pathParameters: {'id': headline.id});
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s),

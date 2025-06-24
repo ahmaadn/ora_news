@@ -14,7 +14,7 @@ import 'package:ora_news/views/features/introduction/pages/splash_page.dart';
 import 'package:ora_news/views/features/main/pages/main_page.dart';
 import 'package:ora_news/views/features/news/pages/add_update_news_page.dart';
 import 'package:ora_news/views/features/news/pages/list_my_news_page.dart';
-import 'package:ora_news/views/features/news_detail/pages/news_detail_page.dart';
+import 'package:ora_news/views/features/news/pages/news_detail_page.dart';
 import 'package:ora_news/views/features/profile/pages/profile_page.dart';
 import 'package:provider/provider.dart';
 
