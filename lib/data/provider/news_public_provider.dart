@@ -134,8 +134,8 @@ class NewsPublicProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> fetchNewsByCategory(String categoryId) async {
-    if (_selectedCategoryId == categoryId) {
+  Future<bool> fetchNewsByCategory(String categoryId, {bool forceRefresh = false}) async {
+    if (_selectedCategoryId == categoryId && !forceRefresh) {
       log("Category $categoryId already selected. No refetch needed.");
       return false;
     }
