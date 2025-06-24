@@ -6,6 +6,7 @@ import 'package:ora_news/app/config/app_typography.dart';
 import 'package:ora_news/data/provider/news_public_provider.dart';
 import 'package:ora_news/views/widgets/custom_form_field.dart';
 import 'package:ora_news/views/widgets/inline_card.dart';
+import 'package:ora_news/views/widgets/load_more_button.dart';
 import 'package:provider/provider.dart';
 
 class SearchResultsPage extends StatefulWidget {
@@ -109,6 +110,12 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                         itemBuilder: (context, index) {
                           final result = provider.newsBySearch[index];
                           return InlineCard(highlight: result);
+                        },
+                      ),
+                      LoadMoreButton(
+                        isLoading: provider.isLoadingMore,
+                        onPressed: () {
+                          provider.loadMoreNews(search: widget.query);
                         },
                       ),
                     ],

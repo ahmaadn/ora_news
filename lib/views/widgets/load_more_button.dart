@@ -14,20 +14,17 @@ class LoadMoreButton extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isLoading) {
       return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
-              ),
-              SizedBox(width: 8),
-              Text("Loading", style: TextStyle(color: AppColors.grey600, fontSize: 14)),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
+            ),
+            SizedBox(width: 8),
+            Text("Loading", style: TextStyle(color: AppColors.grey600, fontSize: 14)),
+          ],
         ),
       );
     }
