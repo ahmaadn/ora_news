@@ -17,15 +17,17 @@ class NewsPublicProvider with ChangeNotifier {
 
   NewsArticle? _newsArticleDetailShow;
 
-  // State untuk kategori yang dipilih
   String? _selectedCategoryId;
+  int _page = 1;
+  static const int _defaultPerPage = 20;
 
   // State untuk status pemuatan
   bool _isLoading = false;
   bool _isLoadingCategoryNews = false;
+  bool _isLoadingMore = false;
   String? _errorMessage;
 
-  // Getter untuk mengakses state dari UI
+  // Getters untuk mengakses state dari UI
   List<NewsArticle> get headlines => _headlines;
   List<NewsArticle> get trending => _trending;
   List<NewsArticle> get highlights => _highlights;
@@ -37,125 +39,178 @@ class NewsPublicProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isLoadingCategoryNews => _isLoadingCategoryNews;
   String? get errorMessage => _errorMessage;
+  bool get isLoadingMore => _isLoadingMore;
+
+  // Pagination
+  int get page => _page;
+  int get perPage => _defaultPerPage;
 
   NewsArticle? get newsArticleDetailShow => _newsArticleDetailShow;
 
-  Future<bool> fetchHomeData() async {
-    _isLoading = true;
-    _errorMessage = null;
+  void _setLoading(bool value, {String? message}) {
+    _isLoading = value;
+    _errorMessage = message;
     notifyListeners();
+  }
 
-    final results = await Future.wait([
-      NewsService.getNews(perPage: 30, latest: true),
-      NewsService.getCategories(),
-    ]);
+  void _setLoadingCategoryNews(bool value, {String? message}) {
+    _isLoadingCategoryNews = value;
+    _errorMessage = message;
+    notifyListeners();
+  }
 
-    log("Berhasil 2 ambil data untuk kategori dan news");
-    log("${results[0].success}, ${results[1].success}");
+  void _setLoadingMore(bool value, {String? message}) {
+    _isLoadingMore = value;
+    _errorMessage = message;
+    notifyListeners();
+  }
 
-    if (results[0].success && results[1].success) {
-      log("SINIII");
-      PaginationNews pagination = results[0].data;
-      log("Jumlah Artikel ${pagination.items.length}");
+  Future<bool> fetchHomeData() async {
+    _setLoading(true);
 
-      _headlines = pagination.items.take(5).toList();
-      _highlights = pagination.items.skip(5).take(5).toList();
-      _trending = pagination.items.skip(10).toList();
+    try {
+      final results = await Future.wait([
+        NewsService.getNews(perPage: 30, latest: true),
+        NewsService.getCategories(),
+      ]);
 
-      _categories = results[1].data.data;
-      log("Jumlah Categories ${_categories.length}");
-      _errorMessage = null;
-      log("Berhasil get news");
-      notifyListeners();
-      return true;
-    } else {
-      _errorMessage = "Error fetching news";
-      notifyListeners();
+      if (results[0].success && results[1].success) {
+        final PaginationNews pagination = results[0].data;
+        log("Berhasil get news");
+        log("Jumlah Artikel ${pagination.items.length}");
+        log("Jumlah Categories ${_categories.length}");
+
+        _headlines = pagination.items.take(5).toList();
+        _highlights = pagination.items.skip(5).take(5).toList();
+        _trending = pagination.items.skip(10).toList();
+        _categories = results[1].data.data;
+
+        _setLoading(false, message: null);
+        return true;
+      } else {
+        _setLoading(false, message: "Error fetching home data: ${results[0].message}");
+        return false;
+      }
+    } catch (e) {
+      _setLoading(false, message: "An unexpected error occurred: $e");
       return false;
     }
   }
 
-  Future<bool> fetchNewsByCategory(String? categoryId) async {
-    if (_selectedCategoryId == categoryId) return false;
+  Future<bool> loadMoreNews({String? search}) async {
+    _setLoadingMore(true);
+
+    final results = await NewsService.getNews(
+      perPage: _defaultPerPage,
+      latest: true,
+      category: _selectedCategoryId,
+      page: _page + 1,
+      search: search,
+    );
+
+    if (results.success) {
+      _page += 1;
+      PaginationNews pagination = results.data;
+
+      if (search != null) {
+        _newsBySearch.addAll(pagination.items);
+      } else {
+        if (pagination.items.isNotEmpty) {
+          _trending.addAll(pagination.items);
+        }
+        if (_selectedCategoryId != null) {
+          _newsByCategory.addAll(pagination.items);
+        }
+      }
+
+      log(
+        "Berhasil get news Page: $_page Perpage: $_defaultPerPage, Category: $_selectedCategoryId, Search $search",
+      );
+      _setLoadingMore(false);
+      return true;
+    } else {
+      _setLoadingMore(false, message: "Error loading more news: ${results.message}");
+      return false;
+    }
+  }
+
+  Future<bool> fetchNewsByCategory(String categoryId, {bool forceRefresh = false}) async {
+    if (_selectedCategoryId == categoryId && !forceRefresh) {
+      log("Category $categoryId already selected. No refetch needed.");
+      return false;
+    }
 
     _selectedCategoryId = categoryId;
-    if (categoryId == null || categoryId == "All News") {
+    _page = 1;
+
+    if (categoryId == "all") {
       _newsByCategory = [];
       notifyListeners();
       return false;
     }
 
-    _isLoadingCategoryNews = true;
-    _errorMessage = null;
-    notifyListeners();
+    _setLoading(true);
 
     final results = await NewsService.getNews(
-      perPage: 30,
+      perPage: _defaultPerPage,
       latest: true,
       category: categoryId,
     );
-    _isLoadingCategoryNews = false;
 
     if (results.success) {
       PaginationNews pagination = results.data;
-      log("Jumlah Artikel ${pagination.items.length}");
+      log(
+        "Berhasil get news by Category $categoryId, Jumlah Artikel ${pagination.items.length}",
+      );
+
+      // Update _newsByCategory list for the selected category
+      _newsByCategory = pagination.items;
 
       _headlines = pagination.items.take(5).toList();
       _highlights = pagination.items.skip(5).take(5).toList();
       _trending = pagination.items.skip(10).toList();
 
-      _errorMessage = null;
-      log("Berhasil get news by Category $categoryId");
-      notifyListeners();
+      _setLoading(false, message: null);
       return true;
     } else {
-      _errorMessage = "Error fetching news";
-      notifyListeners();
+      _setLoading(false, message: 'Error fetching news');
       return false;
     }
   }
 
   Future<bool> fetchNewsBySearch(String search) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
+    _setLoading(true);
+    _page = 1;
 
     final results = await NewsService.getNews(perPage: 20, latest: true, search: search);
-    _isLoading = false;
 
     if (results.success) {
       PaginationNews pagination = results.data;
-      log("Jumlah Artikel ${pagination.items.length}");
       _newsBySearch = pagination.items;
-      _errorMessage = null;
-      log("Berhasil get news by Search $search");
-      notifyListeners();
+
+      log("Berhasil get news by Search $search, Jumlah Artikel ${pagination.items.length}");
+
+      _setLoading(false, message: null);
       return true;
     } else {
-      _errorMessage = "Error fetching news";
-      notifyListeners();
+      _setLoading(false, message: '"Error fetching news by search: ${results.message}"');
       return false;
     }
   }
 
   Future<bool> fetchDetailNews(String id) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
+    _setLoading(true);
 
     final results = await NewsService.getDetailNews(id);
-    _isLoading = false;
 
     if (results.success) {
       NewsArticle data = results.data;
       log("News Berhasil di peroleh : ${data.title}");
       _newsArticleDetailShow = data;
-      _errorMessage = null;
-      notifyListeners();
+      _setLoading(false, message: null);
       return true;
     } else {
-      _errorMessage = "Error fetching news Detail";
-      notifyListeners();
+      _setLoading(false, message: "Error fetching news Detail");
       return false;
     }
   }
@@ -166,20 +221,27 @@ class NewsPublicProvider with ChangeNotifier {
   }
 
   void addSearchHistory(String query) {
-    notifyListeners();
-    if (query.trim().isEmpty) return;
+    final trimmedQuery = query.trim();
+    if (trimmedQuery.isEmpty) return;
 
-    if (!_recentSearches.contains(query)) {
-      _recentSearches.insert(0, query);
+    if (!_recentSearches.contains(trimmedQuery)) {
+      _recentSearches.insert(0, trimmedQuery);
+      // Limit search history to a certain number, e.g., 10
+      if (_recentSearches.length > 10) {
+        _recentSearches.removeLast();
+      }
       notifyListeners();
     }
-    notifyListeners();
+    // If it already exists, move it to the top
+    else {
+      _recentSearches.remove(trimmedQuery);
+      _recentSearches.insert(0, trimmedQuery);
+      notifyListeners();
+    }
   }
 
   Future<bool> fetchCategory() async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
+    _setLoadingCategoryNews(true);
 
     final results = await NewsService.getCategories();
 
@@ -188,13 +250,29 @@ class NewsPublicProvider with ChangeNotifier {
     if (results.success) {
       _categories = results.data.data;
       log("Jumlah Categories ${_categories.length}");
-      _errorMessage = null;
-      notifyListeners();
+      _setLoadingCategoryNews(false);
       return true;
     } else {
-      _errorMessage = "Error fetching news";
-      notifyListeners();
+      _setLoadingCategoryNews(false);
       return false;
     }
+  }
+
+  void resetState() {
+    _headlines = [];
+    _trending = [];
+    _highlights = [];
+    _categories = [];
+    _newsByCategory = [];
+    _newsBySearch = [];
+    _recentSearches.clear();
+    _newsArticleDetailShow = null;
+    _selectedCategoryId = null;
+    _page = 1;
+    _isLoadingMore = false;
+    _isLoading = false;
+    _isLoadingCategoryNews = false;
+    _errorMessage = null;
+    notifyListeners();
   }
 }
