@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:ora_news/app/config/app_color.dart';
 import 'package:ora_news/app/config/app_spacing.dart';
 import 'package:ora_news/app/config/app_typography.dart';
-import 'package:ora_news/app/constants/route_names.dart';
 import 'package:ora_news/app/utils/app_date_formatter.dart';
 import 'package:ora_news/app/utils/image_placeholder.dart' show ImagePlaceholder;
 import 'package:ora_news/data/models/news_models.dart';
 import 'package:ora_news/data/provider/news_public_provider.dart';
 import 'package:ora_news/views/widgets/app_button.dart';
+import 'package:ora_news/views/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class NewsDetailPage extends StatefulWidget {
@@ -67,9 +67,11 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppSpacing.vsMedium,
-                OutlineButtonWidget(
+                PrimaryButton(
                   onPressed: () {},
                   text: provider.newsArticleDetailShow?.category.name.toUpperCase(),
+                  buttonSize: CustomButtonSize.small,
+                  backgroundColor: AppColors.primary,
                 ),
                 AppSpacing.vsMedium,
 
