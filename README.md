@@ -1,6 +1,6 @@
 # Ora News
 
-![Ora News Cover](assets\cover\ora-news-cover.png)
+![Ora News Cover](./assets/cover/ora-news-cover.png)
 
 Ora News is a modern mobile news application built with Flutter. It provides a seamless experience for users to stay updated with the latest news, search for specific topics, and even contribute by managing their own news articles.
 
