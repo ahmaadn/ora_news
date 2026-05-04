@@ -1,138 +1,82 @@
 # Ora News
 
-## Anggota Kelompok 7
+![Ora News Cover](assets\cover\ora-news-cover.png)
 
-  - Ahmad Nur Sahid (2206042)
-  - Deden Ruli Cahyadi (2206054)
------
+Ora News is a modern mobile news application built with Flutter. It provides a seamless experience for users to stay updated with the latest news, search for specific topics, and even contribute by managing their own news articles.
 
-## Tentang Proyek
+## 🚀 Features
 
-Ora News adalah aplikasi berita yang dibangun menggunakan Flutter. Aplikasi ini memungkinkan pengguna untuk menjelajahi, membaca, dan mencari berita dari berbagai kategori. Pengguna yang terautentikasi juga dapat mempublikasikan dan mengelola artikel berita mereka sendiri.
+- **Authentication System**: Secure user registration, login, and password recovery.
+- **Dynamic News Feed**:
+    - **Headline Carousel**: Featured news displayed in an interactive slider.
+    - **Trending News**: Stay informed with what's popular.
+    - **Highlights**: A curated list of important stories.
+- **Search & Discovery**: Easily find news articles based on keywords and categories.
+- **News Management (User Contributions)**:
+    - Create new news articles.
+    - Update existing content.
+    - Delete personal news entries.
+- **Profile Management**: Customize user details and manage personal news archives.
+- **Responsive Design**: Polished UI with custom typography, spacing, and theming.
 
-Aplikasi ini dirancang dengan arsitektur yang bersih, memisahkan antara logika bisnis, layanan data, dan antarmuka pengguna (UI) untuk memastikan skalabilitas dan kemudahan dalam pemeliharaan.
+## 🛠️ Tech Stack
 
-## ✨ Fitur-fitur Utama
+- **Framework**: [Flutter](https://docs.flutter.dev/)
+- **State Management**: [Provider](https://pub.dev/packages/provider)
+- **Networking**: [HTTP](https://pub.dev/packages/http)
+- **Local Storage**: [Shared Preferences](https://pub.dev/packages/shared_preferences)
+- **UI Components**: Carousel Slider, Cached Network Image, Image Picker.
 
-Berikut adalah beberapa fitur utama yang tersedia dalam aplikasi Ora News:
+## 📂 Project Structure
 
-### Autentikasi Pengguna
-
-  - **Splash Screen & Onboarding**: Pengenalan aplikasi bagi pengguna baru.
-  - **Login & Registrasi**: Sistem autentikasi untuk pengguna baru dan yang sudah ada.
-  - **Lupa Password**: Fitur untuk mereset password melalui email.
-  - **Manajemen Sesi**: Menggunakan token untuk menjaga sesi login pengguna.
-
-### Penjelajahan Berita
-
-  - **Halaman Utama (Home)**: Menampilkan berita utama (headlines), sorotan (highlights), dan berita yang sedang tren.
-  - **Berita Berdasarkan Kategori**: Pengguna dapat memfilter berita berdasarkan kategori yang tersedia.
-  - **Detail Berita**: Halaman khusus untuk membaca konten lengkap dari sebuah artikel berita.
-  - **Pencarian Berita**: Fitur untuk mencari berita berdasarkan kata kunci.
-  - **Riwayat Pencarian**: Menyimpan dan menampilkan riwayat pencarian terakhir pengguna.
-
-### Manajemen Berita oleh Pengguna
-
-  - **Buat Berita**: Pengguna yang sudah login dapat membuat dan mempublikasikan artikel berita baru.
-  - **Update Berita**: Pengguna dapat mengedit artikel berita yang telah mereka publikasikan.
-  - **Hapus Berita**: Pengguna dapat menghapus artikel berita mereka.
-  - **Daftar Berita Saya**: Halaman khusus yang menampilkan semua berita yang telah dipublikasikan oleh pengguna.
-  - **Upload Gambar**: Pengguna dapat mengunggah gambar untuk artikel berita mereka dari penyimpanan lokal atau melalui URL.
-
-### Profil Pengguna
-
-  - **Halaman Profil**: Menampilkan informasi pengguna dan memungkinkan pembaruan data seperti nama, email, dan password.
-  - **Logout**: Mengakhiri sesi pengguna saat ini.
-
-## 📂 Struktur Folder
-
-Proyek ini mengikuti struktur folder standar Flutter yang dilengkapi dengan pemisahan berdasarkan fitur untuk direktori `lib`.
-
-```
-ora_news/
-├── android/            # File spesifik untuk platform Android
-├── ios/                # File spesifik untuk platform iOS
-├── lib/                # Direktori utama kode Dart
-│   ├── app/            # Konfigurasi global, routing, tema, dan utilitas
-│   │   ├── config/
-│   │   ├── constants/
-│   │   └── utils/
-│   ├── data/           # Layer data, termasuk model, API service, dan provider
-│   │   ├── api/
-│   │   ├── models/
-│   │   └── provider/
-│   ├── views/          # Layer UI, dipisahkan berdasarkan fitur
-│   │   ├── features/
-│   │   │   ├── auth/
-│   │   │   ├── discover/
-│   │   │   ├── home/
-│   │   │   ├── introduction/
-│   │   │   ├── main/
-│   │   │   ├── news/
-│   │   │   └── profile/
-│   │   └── widgets/    # Widget yang dapat digunakan kembali
-│   └── main.dart       # Titik masuk utama aplikasi
-├── linux/              # File spesifik untuk platform Linux
-├── macos/              # File spesifik untuk platform macOS
-├── test/               # Tes untuk aplikasi
-├── web/                # File spesifik untuk platform Web
-├── windows/            # File spesifik untuk platform Windows
-└── pubspec.yaml        # Konfigurasi dependensi dan aset proyek
+```text
+lib/
+├── app/
+│   ├── config/       # Theming, routing, and spacing definitions
+│   ├── constants/    # API endpoints and route names
+│   └── utils/        # Formatters, validators, and notification helpers
+├── data/
+│   ├── api/          # Service classes for network requests
+│   ├── models/       # Data models for Auth, News, and User
+│   └── provider/     # State management logic
+└── views/
+    ├── features/     # Feature-specific pages and widgets
+    └── widgets/      # Reusable global UI components
 ```
 
-### Penjelasan Direktori `lib`
+## ⚙️ Getting Started
 
-  - `app/`: Berisi semua konfigurasi tingkat aplikasi seperti routing (`app_route.dart`), tema (`app_theme.dart`), warna (`app_color.dart`), dan utilitas umum (`app_date_formatter.dart`).
-  - `data/`: Bertanggung jawab atas semua hal yang berkaitan dengan data.
-      - `api/`: Mengelola komunikasi dengan API backend (misalnya, `auth_service.dart`, `news_service.dart`).
-      - `models/`: Berisi kelas model Dart untuk data seperti `NewsArticle` dan `User`.
-      - `provider/`: Berisi state management menggunakan Provider (misalnya, `auth_provider.dart`, `news_public_provider.dart`).
-  - `views/`: Berisi semua komponen UI.
-      - `features/`: Halaman-halaman (screens) yang dikelompokkan berdasarkan fiturnya (contoh: `home`, `auth`, `profile`).
-      - `widgets/`: Widget kustom yang digunakan di berbagai bagian aplikasi (contoh: `news_card.dart`, `custom_button.dart`).
-  - `main.dart`: Titik masuk aplikasi tempat inisialisasi Provider dan `MaterialApp` dilakukan.
+### Prerequisites
 
-## 🚀 Cara Menjalankan Aplikasi
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) installed on your machine.
+- An IDE (VS Code, Android Studio) with Flutter/Dart plugins.
 
-Untuk menjalankan proyek ini di lingkungan lokal Anda, ikuti langkah-langkah berikut:
+### Installation
 
-### Prasyarat
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/ahmaadn/ora_news
+   cd ora_news
+   ```
 
-  - Pastikan Anda telah menginstal **Flutter SDK** di komputer Anda. Untuk panduan instalasi, silakan merujuk ke [dokumentasi resmi Flutter](https://docs.flutter.dev/get-started/install).
-  - Emulator Android, Simulator iOS, atau perangkat fisik yang terhubung.
-  - Clone repositori backend dan jalankan terlebih dahulu.
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
 
-### Langkah-langkah Instalasi
+3. **Run the application**
+   ```bash
+   flutter run
+   ```
 
-1.  **Clone Repositori**
+## 🌐 Backend & API
 
-    ```bash
-    git clone https://github.com/ahmaadn/ora_news.git
-    cd ora_news
-    ```
+This frontend application requires a backend service to function fully. You can find the source code and setup instructions for the backend API here:
 
-2.  **Instal Dependensi**
+- **Backend Repository**: [ora-news-backend](https://github.com/ahmaadn/ora-news-backend)
 
-    Jalankan perintah berikut di terminal untuk mengunduh semua paket yang diperlukan:
+Within this Flutter project, the API configuration and endpoints can be found and modified in `lib/app/constants/api_constants.dart`.
 
-    ```bash
-    flutter pub get
-    ```
+## 📄 License
 
-3.  **Jalankan Aplikasi**
-
-    Pastikan perangkat atau emulator Anda berjalan, lalu jalankan perintah berikut:
-
-    ```bash
-    flutter run
-    ```
-
-Aplikasi akan di-build dan diinstal di perangkat target Anda.
-
-## 🌐 Backend
-
-Aplikasi ini memerlukan backend untuk berfungsi. Backend yang digunakan untuk proyek ini tersedia di repositori berikut:
-
-[**ora-news-backend**](https://github.com/ahmaadn/ora-news-backend)
-
-Pastikan server backend berjalan sebelum menjalankan aplikasi mobile ini untuk memastikan konektivitas API yang lancar. Konfigurasi endpoint API dapat ditemukan di `lib/app/constants/api_constants.dart`.
+See [LICENSE](LICENSE) for more information.
